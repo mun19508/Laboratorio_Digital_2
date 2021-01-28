@@ -23,15 +23,38 @@
 #pragma config BOR4V = BOR40V   // Brown-out Reset Selection bit (Brown-out Reset set to 4.0V)
 #pragma config WRT = OFF        // Flash Program Memory Self Write Enable bits (Write protection off)
 
+#define _XTAL_FREQ 4000000
 //**************************Prototipos de Funciones*****************************
 void config(void);
 void start_race(void);
+void semaforo(void);
 //******************************************************************************
 void main(void) {
     config();
-    
+   
     while(1){
+        if(PORTBbits.RB0 == 0) {
+            semaforo();
+        }
     }
+}
+void semaforo(void){
+    PORTDbits.RD0 = 1;
+    PORTDbits.RD1 = 0;
+    PORTDbits.RD2 = 0;
+    _delay(3000);
+    PORTDbits.RD0 = 0;
+    PORTDbits.RD1 = 1;
+    PORTDbits.RD2 = 0;
+    _delay(3000);
+    PORTDbits.RD0 = 0;
+    PORTDbits.RD1 = 0;
+    PORTDbits.RD2 = 1;
+    _delay(1000);    
+    PORTDbits.RD0 = 0;
+    PORTDbits.RD1 = 0;
+    PORTDbits.RD2 = 0;
+    _delay(500);    
 }
 void config(void){
     ANSEL = 0;
@@ -39,11 +62,13 @@ void config(void){
     TRISA = 0;
     TRISC = 0;
     TRISD = 0;
-    TRISE = 0; //Puerto A, C, D & E como salidas
-    TRISB = 1; //Puerto B como entrada 
+    TRISE = 0; //Puerto A, C, D & E como salidas 
+    TRISBbits.TRISB0  = 1;
+    TRISBbits.TRISB1 = 1;
+    TRISBbits.TRISB2 = 1; //Pines B0, B1 & B2 como entrada
     PORTA = 0;
+    PORTB = 0;
     PORTC = 0;
     PORTD = 0;
     PORTE = 0; //Se limpian los puertos
-    OPTION_REGbits.nRBPU = 0; //Se habilita el pull up interno       
 }

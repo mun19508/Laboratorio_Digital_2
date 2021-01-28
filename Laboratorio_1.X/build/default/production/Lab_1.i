@@ -2658,37 +2658,81 @@ extern __bank0 __bit __timeout;
 
 
 void config(void);
-void start_race(void);
 void semaforo(void);
+void contador(void);
+
+int start;
+int J1 = 0;
+int J2 = 0;
+
 
 void main(void) {
     config();
-
-    while(1){
-        if(PORTBbits.RB0 == 0) {
-            semaforo();
+    start = 0;
+    while (1) {
+        if (PORTBbits.RB0 == 0 && start == 0) {
+            _delay((unsigned long)((150)*(4000000/4000000.0)));
+            if (PORTBbits.RB0 == 1) {
+                PORTE = 0;
+                J1 = 0;
+                J2 = 0;
+                semaforo();
+                start = 1;
+            }
+        }
+        if (PORTBbits.RB1 == 0 && start == 1) {
+            _delay((unsigned long)((150)*(4000000/4000000.0)));
+            if (PORTBbits.RB1 == 1) {
+                if (J1 == 0) {
+                    J1++;
+                    PORTAbits.RA0 = 1;
+                } else {
+                    PORTA = (PORTA << 1);
+                    J1++;
+                }
+            }
+        }
+        if (PORTBbits.RB2 == 0 && start == 1) {
+            _delay((unsigned long)((150)*(4000000/4000000.0)));
+            if (PORTBbits.RB2 == 1) {
+                if (J2 == 0) {
+                    J2++;
+                    PORTCbits.RC0 = 1;
+                } else {
+                    PORTC = (PORTC << 1);
+                    J2++;
+                }
+            }
+        }
+        if (J1 == 8 || J2 == 8) {
+            if (J1 == 8) {
+                PORTEbits.RE0 = 1;
+            } else {
+                PORTEbits.RE1 = 1;
+            }
+            PORTA = 0;
+            PORTC = 0;
+            start = 0;
         }
     }
 }
-void semaforo(void){
+
+void semaforo(void) {
     PORTDbits.RD0 = 1;
     PORTDbits.RD1 = 0;
     PORTDbits.RD2 = 0;
-    _delay(3000);
+    _delay((unsigned long)((250)*(4000000/4000.0)));
     PORTDbits.RD0 = 0;
     PORTDbits.RD1 = 1;
     PORTDbits.RD2 = 0;
-    _delay(3000);
+    _delay((unsigned long)((250)*(4000000/4000.0)));
     PORTDbits.RD0 = 0;
     PORTDbits.RD1 = 0;
     PORTDbits.RD2 = 1;
-    _delay(1000);
-    PORTDbits.RD0 = 0;
-    PORTDbits.RD1 = 0;
-    PORTDbits.RD2 = 0;
-    _delay(500);
+    _delay((unsigned long)((250)*(4000000/4000.0)));
 }
-void config(void){
+
+void config(void) {
     ANSEL = 0;
     ANSELH = 0;
     TRISA = 0;
@@ -2699,7 +2743,6 @@ void config(void){
     TRISBbits.TRISB1 = 1;
     TRISBbits.TRISB2 = 1;
     PORTA = 0;
-    PORTB = 0;
     PORTC = 0;
     PORTD = 0;
     PORTE = 0;

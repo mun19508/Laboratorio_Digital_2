@@ -26,48 +26,91 @@
 #define _XTAL_FREQ 4000000
 //**************************Prototipos de Funciones*****************************
 void config(void);
-void start_race(void);
 void semaforo(void);
+void contador(void);
+//********************************Variables*************************************
+int start;
+int J1 = 0;
+int J2 = 0;
 //******************************************************************************
+
 void main(void) {
     config();
-   
-    while(1){
-        if(PORTBbits.RB0 == 0) {
-            semaforo();
+    start = 0;
+    while (1) {
+        if (PORTBbits.RB0 == 0 && start == 0) {
+            __delay_us(150);
+            if (PORTBbits.RB0 == 1) {
+                PORTE = 0;
+                J1 = 0;
+                J2 = 0;
+                semaforo();
+                start = 1;
+            }
+        }
+        if (PORTBbits.RB1 == 0 && start == 1) {
+            __delay_us(150);
+            if (PORTBbits.RB1 == 1) {
+                if (J1 == 0) {
+                    J1++;
+                    PORTAbits.RA0 = 1;
+                } else {
+                    PORTA = (PORTA << 1);
+                    J1++;
+                }
+            }
+        }
+        if (PORTBbits.RB2 == 0 && start == 1) {
+            __delay_us(150);
+            if (PORTBbits.RB2 == 1) {
+                if (J2 == 0) {
+                    J2++;
+                    PORTCbits.RC0 = 1;
+                } else {
+                    PORTC = (PORTC << 1);
+                    J2++;
+                }
+            }
+        }
+        if (J1 == 8 || J2 == 8) {
+            if (J1 == 8) {
+                PORTEbits.RE0 = 1;
+            } else {
+                PORTEbits.RE1 = 1;
+            }
+            PORTA = 0;
+            PORTC = 0;
+            start = 0;
         }
     }
 }
-void semaforo(void){
-    PORTDbits.RD0 = 1;
-    PORTDbits.RD1 = 0;
-    PORTDbits.RD2 = 0;
-    _delay(3000);
-    PORTDbits.RD0 = 0;
+
+void semaforo(void) {
+    PORTDbits.RD0 = 1; //Al momento de que la funcion es llamada
+    PORTDbits.RD1 = 0; //empieza la cuenta regresiva enciendo primero
+    PORTDbits.RD2 = 0; //el LED color rojo.
+    __delay_ms(250); //se espera una cierta cantidad de tiempo.
+    PORTDbits.RD0 = 0; //Despues encendiendo el LED color amarillo.
     PORTDbits.RD1 = 1;
     PORTDbits.RD2 = 0;
-    _delay(3000);
-    PORTDbits.RD0 = 0;
+    __delay_ms(250);
+    PORTDbits.RD0 = 0; //Por ultimo se enciende el led color verde.
     PORTDbits.RD1 = 0;
     PORTDbits.RD2 = 1;
-    _delay(1000);    
-    PORTDbits.RD0 = 0;
-    PORTDbits.RD1 = 0;
-    PORTDbits.RD2 = 0;
-    _delay(500);    
+    __delay_ms(250);
 }
-void config(void){
+
+void config(void) {
     ANSEL = 0;
     ANSELH = 0; //Puerto A & B como digitales
     TRISA = 0;
     TRISC = 0;
     TRISD = 0;
     TRISE = 0; //Puerto A, C, D & E como salidas 
-    TRISBbits.TRISB0  = 1;
+    TRISBbits.TRISB0 = 1;
     TRISBbits.TRISB1 = 1;
     TRISBbits.TRISB2 = 1; //Pines B0, B1 & B2 como entrada
     PORTA = 0;
-    PORTB = 0;
     PORTC = 0;
     PORTD = 0;
     PORTE = 0; //Se limpian los puertos

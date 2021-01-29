@@ -11,11 +11,11 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"37 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_1.X\Lab_1.c
+"35 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_1.X\Lab_1.c
 [v _main main `(v  1 e 1 0 ]
-"88
+"85
 [v _semaforo semaforo `(v  1 e 1 0 ]
-"103
+"100
 [v _config config `(v  1 e 1 0 ]
 "167 C:\Program Files\Microchip\xc8\v2.31\pic\include\proc\pic16f887.h
 [v _PORTA PORTA `VEuc  1 e 1 @5 ]
@@ -105,24 +105,24 @@
 [v _ANSEL ANSEL `VEuc  1 e 1 @392 ]
 "3450
 [v _ANSELH ANSELH `VEuc  1 e 1 @393 ]
-"32 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_1.X\Lab_1.c
+"31 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_1.X\Lab_1.c
 [v _start start `i  1 e 2 0 ]
-"33
+"32
 [v _J1 J1 `i  1 e 2 0 ]
-"34
+"33
 [v _J2 J2 `i  1 e 2 0 ]
-"37
+"35
 [v _main main `(v  1 e 1 0 ]
 {
-"86
+"83
 } 0
-"88
+"85
 [v _semaforo semaforo `(v  1 e 1 0 ]
 {
-"101
+"98
 } 0
-"103
+"100
 [v _config config `(v  1 e 1 0 ]
 {
-"117
+"114
 } 0

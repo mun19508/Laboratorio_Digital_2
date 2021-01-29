@@ -5,7 +5,7 @@ Linker command line:
 -W-3 --edf=C:\Program Files\Microchip\xc8\v2.31\pic\dat\en_msgs.txt -cn \
   -h+dist/default/production\Laboratorio_1.X.production.sym \
   --cmf=dist/default/production\Laboratorio_1.X.production.cmf -z -Q16F887 \
-  -oC:\Users\Daniel\AppData\Local\Temp\s26sc.3 --defsym=__MPLAB_BUILD=1 \
+  -oC:\Users\Daniel\AppData\Local\Temp\s1e08.2 --defsym=__MPLAB_BUILD=1 \
   -Mdist/default/production/Laboratorio_1.X.production.map -E1 \
   -ver=XC8 Compiler --acfsm=1493 -ASTACK=0110h-016Fh -pstack=STACK \
   -ACODE=00h-07FFhx4 -ASTRCODE=00h-01FFFh -ASTRING=00h-0FFhx32 \
@@ -18,7 +18,7 @@ Linker command line:
   -AEEDATA=00h-0FFh/02100h -peeprom_data=EEDATA -DEEDATA=2 -DCODE=2 \
   -DSTRCODE=2 -DSTRING=2 -DCONST=2 -DENTRY=2 \
   -preset_vec=00h,intentry,init,end_init -ppowerup=CODE -pcinit=CODE \
-  -pfunctab=ENTRY -k C:\Users\Daniel\AppData\Local\Temp\s26sc.o \
+  -pfunctab=ENTRY -k C:\Users\Daniel\AppData\Local\Temp\s1e08.o \
   dist/default/production\Laboratorio_1.X.production.o 
 
 Object code version is 3.11
@@ -28,15 +28,15 @@ Machine type is 16F887
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-C:\Users\Daniel\AppData\Local\Temp\s26sc.o
+C:\Users\Daniel\AppData\Local\Temp\s1e08.o
                 end_init                              0        0        3        0       0
                 config                             2007     2007        2        0       4
 dist/default/production\Laboratorio_1.X.production.o
                 cinit                               7F6      7F6        A      FEC       0
                 config                             2007     2007        2        0       4
-                text2                               703      703       14      E06       0
-                text1                               717      717       37      E2E       0
-                maintext                            74E      74E       A8      E9C       0
+                text2                               705      705       14      E0A       0
+                text1                               719      719       37      E32       0
+                maintext                            750      750       A6      EA0       0
                 cstackCOMMON                         76       76        4       70       1
                 bssCOMMON                            70       70        6       70       1
 
@@ -46,9 +46,9 @@ TOTAL           Name                               Link     Load   Length     Sp
         CLASS   CODE           
                 end_init                              0        0        3         0
                 cinit                               7F6      7F6        A         0
-                text2                               703      703       14         0
-                text1                               717      717       37         0
-                maintext                            74E      74E       A8         0
+                text2                               705      705       14         0
+                text1                               719      719       37         0
+                maintext                            750      750       A6         0
 
         CLASS   STRCODE        
 
@@ -96,9 +96,9 @@ SEGMENTS        Name                           Load    Length   Top    Selector 
 
                 reset_vec                      000000  000003  000003         0       0  CODE        2
                 bssCOMMON                      000070  00000A  00007A        70       1  COMMON      1
-                text2                          000703  000014  000717       E06       0  CODE        2
-                text1                          000717  000037  00074E       E2E       0  CODE        2
-                maintext                       00074E  0000A8  0007F6       E9C       0  CODE        2
+                text2                          000705  000014  000719       E0A       0  CODE        2
+                text1                          000719  000037  000750       E32       0  CODE        2
+                maintext                       000750  0000A6  0007F6       EA0       0  CODE        2
                 cinit                          0007F6  00000A  000800       FEC       0  CODE        2
 
 
@@ -109,13 +109,13 @@ UNUSED ADDRESS RANGES
         BANK1            00A0-00EF             50           1
         BANK2            0110-016F             60           1
         BANK3            0190-01EF             60           1
-        CODE             0003-0702            700           2
+        CODE             0003-0704            702           2
                          0800-1FFF            800
         COMMON           007A-007D              4           1
-        CONST            0003-0702            100           2
+        CONST            0003-0704            100           2
                          0800-1FFF            100
         EEDATA           2100-21FF            100           2
-        ENTRY            0003-0702            100           2
+        ENTRY            0003-0704            100           2
                          0800-1FFF            100
         IDLOC            2000-2003              4           2
         RAM              0020-006F             50           1
@@ -127,9 +127,9 @@ UNUSED ADDRESS RANGES
         SFR2             0100-010F             10           1
         SFR3             0180-018F             10           1
         STACK            0110-016F             60           1
-        STRCODE          0003-0702            700           2
+        STRCODE          0003-0704            702           2
                          0800-1FFF           1800
-        STRING           0003-0702            100           2
+        STRING           0003-0704            100           2
                          0800-1FFF            100
 
                                   Symbol Table
@@ -228,21 +228,21 @@ ___sp                    stack        0000
 ___stackhi               (abs)        0000
 ___stacklo               (abs)        0000
 __end_of__initialization cinit        07FC
-__end_of_config          text2        0717
+__end_of_config          text2        0719
 __end_of_main            maintext     07F6
-__end_of_semaforo        text1        074E
+__end_of_semaforo        text1        0750
 __initialization         cinit        07F6
 __pbssCOMMON             bssCOMMON    0070
 __pcstackCOMMON          cstackCOMMON 0076
-__pmaintext              maintext     074E
-__ptext1                 text1        0717
-__ptext2                 text2        0703
+__pmaintext              maintext     0750
+__ptext1                 text1        0719
+__ptext2                 text2        0705
 __size_of_config         (abs)        0000
 __size_of_main           (abs)        0000
 __size_of_semaforo       (abs)        0000
-_config                  text2        0703
-_main                    maintext     074E
-_semaforo                text1        0717
+_config                  text2        0705
+_main                    maintext     0750
+_semaforo                text1        0719
 _start                   bssCOMMON    0074
 btemp                    (abs)        007E
 end_of_initialization    cinit        07FC
@@ -262,7 +262,7 @@ FUNCTION INFORMATION:
 
  *************** function _main *****************
  Defined at:
-		line 37 in file "Lab_1.c"
+		line 35 in file "Lab_1.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -292,7 +292,7 @@ Total ram usage:        1 bytes
 
  *************** function _semaforo *****************
  Defined at:
-		line 88 in file "Lab_1.c"
+		line 85 in file "Lab_1.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -321,7 +321,7 @@ Total ram usage:        3 bytes
 
  *************** function _config *****************
  Defined at:
-		line 103 in file "Lab_1.c"
+		line 100 in file "Lab_1.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -358,9 +358,9 @@ shared
 shared estimated size: 6
 
 Lab_1.c
-		_main          		CODE           	074E	0000	168
-		_config        		CODE           	0703	0000	20
-		_semaforo      		CODE           	0717	0000	55
+		_main          		CODE           	0750	0000	166
+		_config        		CODE           	0705	0000	20
+		_semaforo      		CODE           	0719	0000	55
 
-Lab_1.c estimated size: 243
+Lab_1.c estimated size: 241
 

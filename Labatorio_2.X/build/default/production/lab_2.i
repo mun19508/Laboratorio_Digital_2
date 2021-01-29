@@ -1,4 +1,4 @@
-# 1 "Lab_1.c"
+# 1 "lab_2.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,9 +6,7 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "Lab_1.c" 2
-
-
+# 1 "lab_2.c" 2
 
 
 
@@ -2637,7 +2635,7 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 9 "Lab_1.c" 2
+# 7 "lab_2.c" 2
 
 
 #pragma config FOSC = INTRC_NOCLKOUT
@@ -2651,87 +2649,32 @@ extern __bank0 __bit __timeout;
 #pragma config FCMEN = OFF
 #pragma config LVP = OFF
 
-
 #pragma config BOR4V = BOR40V
 #pragma config WRT = OFF
 
 
-
-void config(void);
+void configuracion(void);
 void semaforo(void);
+void contador(void);
 
-int start = 0;
+int start;
 int J1 = 0;
 int J2 = 0;
 
+
+void __attribute__((picinterrupt(("")))) ISR(void){
+
+}
+
 void main(void) {
-    config();
-    while (1) {
-        if (PORTBbits.RB0 == 0 && start == 0) {
-            _delay((unsigned long)((150)*(4000000/4000000.0)));
-            if (PORTBbits.RB0 == 1) {
-                PORTE = 0;
-                J1 = 0;
-                J2 = 0;
-                semaforo();
-                start = 1;
-            }
-        }
-        if (PORTBbits.RB1 == 0 && start == 1) {
-            _delay((unsigned long)((150)*(4000000/4000000.0)));
-            if (PORTBbits.RB1 == 1) {
-                if (J1 == 0) {
-                    J1++;
-                    PORTAbits.RA0 = 1;
-                } else {
-                    PORTA = (PORTA << 1);
-                    J1++;
-                }
-            }
-        }
-        if (PORTBbits.RB2 == 0 && start == 1) {
-            _delay((unsigned long)((150)*(4000000/4000000.0)));
-            if (PORTBbits.RB2 == 1) {
-                if (J2 == 0) {
-                    J2++;
-                    PORTCbits.RC0 = 1;
-                } else {
-                    PORTC = (PORTC << 1);
-                    J2++;
-                }
-            }
-        }
-        if (J1 == 8 || J2 == 8) {
-            if (J1 == 8) {
-                PORTEbits.RE0 = 1;
-            } else {
-                PORTEbits.RE1 = 1;
-            }
-            PORTA = 0;
-            PORTC = 0;
-            start = 0;
-        }
-    }
+    return;
 }
+void configuracion(void){
 
-void semaforo(void) {
-    PORTDbits.RD0 = 1;
-    PORTDbits.RD1 = 0;
-    PORTDbits.RD2 = 0;
-    _delay((unsigned long)((250)*(4000000/4000.0)));
-    PORTDbits.RD0 = 0;
-    PORTDbits.RD1 = 1;
-    PORTDbits.RD2 = 0;
-    _delay((unsigned long)((250)*(4000000/4000.0)));
-    PORTDbits.RD0 = 0;
-    PORTDbits.RD1 = 0;
-    PORTDbits.RD2 = 1;
-    _delay((unsigned long)((250)*(4000000/4000.0)));
-}
-
-void config(void) {
     ANSEL = 0;
     ANSELH = 0;
+    ANSELHbits.ANS8 = 0;
+
     TRISA = 0;
     TRISC = 0;
     TRISD = 0;
@@ -2739,6 +2682,7 @@ void config(void) {
     TRISBbits.TRISB0 = 1;
     TRISBbits.TRISB1 = 1;
     TRISBbits.TRISB2 = 1;
+
     PORTA = 0;
     PORTC = 0;
     PORTD = 0;

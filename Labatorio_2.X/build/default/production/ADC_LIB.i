@@ -2837,5 +2837,5 @@ void Select_ch(uint8_t channel) {
             ADCON0bits.CHS3 = 1;
             break;
     }
-    ADCON0bits.GO = 1;
+
 }

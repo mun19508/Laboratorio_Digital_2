@@ -34,10 +34,14 @@ uint8_t nibble_l;
 uint8_t nibble_h;
 //******************************************************************************
 //******************************Interrupciones**********************************
+
 void __interrupt() ISR(void) {
-    if (ADIF == 1) {
-        
+    if (PIR1bits.ADIF == 1) {
+        PIR1bits.ADIF = 0;
+        display_adc = ADRESH;
+        ADCON0bits.GO = 1;
     }
+
 }
 //******************************************************************************
 
@@ -64,4 +68,7 @@ void main(void) {
     PORTC = 0;
     PORTD = 0;
     PORTE = 0; //Se limpian los puertos
+    while(1){
+    
+    }
 }

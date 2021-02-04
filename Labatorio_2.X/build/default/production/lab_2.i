@@ -13,6 +13,7 @@
 
 
 
+
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -2635,10 +2636,10 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 7 "lab_2.c" 2
+# 8 "lab_2.c" 2
 
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 8 "lab_2.c" 2
+# 9 "lab_2.c" 2
 
 # 1 "./ADC_LIB.h" 1
 # 14 "./ADC_LIB.h"
@@ -2648,7 +2649,8 @@ extern __bank0 __bit __timeout;
 void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
 void Select_ch(uint8_t channel);
 void start_ch(uint8_t channel);
-# 9 "lab_2.c" 2
+# 10 "lab_2.c" 2
+
 
 
 
@@ -2670,20 +2672,26 @@ void start_ch(uint8_t channel);
 void configuracion(void);
 
 
-int start;
-int J1 = 0;
-int J2 = 0;
+volatile uint8_t display_adc;
+uint8_t nibble_l;
+uint8_t nibble_h;
 
 
-void __attribute__((picinterrupt(("")))) ISR(void){
-    if (ADIF ==1){
+
+void __attribute__((picinterrupt(("")))) ISR(void) {
+    if (PIR1bits.ADIF == 1) {
+        PIR1bits.ADIF = 0;
+        display_adc = ADRESH;
+        ADCON0bits.GO = 1;
     }
+
 }
+
 
 void main(void) {
-    configuracion();
-}
-void configuracion(void){
+
+    INTCONbits.GIE = 1;
+    INTCONbits.PEIE = 1;
 
     ANSEL = 0;
     ANSELH = 0;
@@ -2703,4 +2711,7 @@ void configuracion(void){
     PORTC = 0;
     PORTD = 0;
     PORTE = 0;
+    while(1){
+
+    }
 }

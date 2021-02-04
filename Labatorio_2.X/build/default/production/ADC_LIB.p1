@@ -972,9 +972,6 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> 15 `i 189
  172 ]
 [e :U 172 ]
-"198
-[; ;ADC_LIB.c: 198:     ADCON0bits.GO = 1;
-[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
 "199
 [; ;ADC_LIB.c: 199: }
 [e :UE 171 ]

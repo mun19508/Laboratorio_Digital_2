@@ -2645,8 +2645,9 @@ extern __bank0 __bit __timeout;
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
 # 14 "./ADC_LIB.h" 2
 
-void start_adc(uint8_t frec);
+void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
 void Select_ch(uint8_t channel);
+void start_ch(uint8_t channel);
 # 9 "lab_2.c" 2
 
 
@@ -2675,7 +2676,8 @@ int J2 = 0;
 
 
 void __attribute__((picinterrupt(("")))) ISR(void){
-
+    if (ADIF ==1){
+    }
 }
 
 void main(void) {
@@ -2685,7 +2687,8 @@ void configuracion(void){
 
     ANSEL = 0;
     ANSELH = 0;
-    ANSELHbits.ANS8 = 0;
+    start_adc(2, 1, 0, 0);
+    start_ch(8);
     Select_ch(8);
 
     TRISA = 0;

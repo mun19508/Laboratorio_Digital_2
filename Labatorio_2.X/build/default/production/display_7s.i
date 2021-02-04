@@ -1,4 +1,4 @@
-# 1 "ADC_LIB.c"
+# 1 "display_7s.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,9 +6,14 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "ADC_LIB.c" 2
-# 1 "./ADC_LIB.h" 1
-# 13 "./ADC_LIB.h"
+# 1 "display_7s.c" 2
+
+
+
+
+
+
+
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -2631,211 +2636,84 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 13 "./ADC_LIB.h" 2
+# 8 "display_7s.c" 2
 
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 14 "./ADC_LIB.h" 2
+# 9 "display_7s.c" 2
 
-void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
-void Select_ch(uint8_t channel);
-void start_ch(uint8_t channel);
-# 1 "ADC_LIB.c" 2
+# 1 "./display_7s.h" 1
+# 12 "./display_7s.h"
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
+# 12 "./display_7s.h" 2
 
 
-void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL) {
-    ADCON0bits.ADON = 1;
-    switch (frec) {
-        case 1:
-            ADCON0bits.ADCS0 = 0;
-            ADCON0bits.ADCS1 = 0;
-            break;
-        case 2:
-            ADCON0bits.ADCS0 = 1;
-            ADCON0bits.ADCS1 = 0;
-            break;
-        case 3:
-            ADCON0bits.ADCS0 = 0;
-            ADCON0bits.ADCS1 = 1;
-            break;
-        case 4:
-            ADCON0bits.ADCS0 = 1;
-            ADCON0bits.ADCS1 = 1;
-            break;
-    }
-    if (isr == 1) {
-        PIE1bits.ADIE = 1;
-        PIR1bits.ADIF = 0;
-    }
-    if (justRL == 0) {
-        ADCON1bits.ADFM = 0;
-    } else {
-        ADCON1bits.ADFM = 1;
-    }
-    switch (Vref) {
-        case 0:
-            ADCON1bits.VCFG0 = 0;
-            ADCON1bits.VCFG1 = 0;
-            break;
-        case 1:
-            ADCON1bits.VCFG0 = 1;
-            ADCON1bits.VCFG1 = 0;
-            break;
-        case 2:
-            ADCON1bits.VCFG0 = 0;
-            ADCON1bits.VCFG1 = 1;
-            break;
-        case 3:
-            ADCON1bits.VCFG0 = 1;
-            ADCON1bits.VCFG1 = 1;
-            break;
-    }
+void Nibbles_L(uint8_t datoL);
+void Nibbles_H(uint8_t datoH);
+void tabla7segmentos(uint8_t valor);
+# 10 "display_7s.c" 2
+
+
+void Nibbles_L(uint8_t datoL) {
+    uint8_t nsl = (datoL & 0b00001111);
+    tabla7segmentos(nsl);
 }
 
-void start_ch(uint8_t channel) {
-    switch (channel) {
-        case 0:
-            ANSELbits.ANS0 = 1;
-            break;
-        case 1:
-            ANSELbits.ANS1 = 1;
-            break;
-        case 2:
-            ANSELbits.ANS2 = 1;
-            break;
-        case 3:
-            ANSELbits.ANS3 = 1;
-            break;
-        case 4:
-            ANSELbits.ANS4 = 1;
-            break;
-        case 5:
-            ANSELbits.ANS5 = 1;
-            break;
-        case 6:
-            ANSELbits.ANS6 = 1;
-            break;
-        case 7:
-            ANSELbits.ANS7 = 1;
-            break;
-        case 8:
-            ANSELHbits.ANS8 = 1;
-            break;
-        case 9:
-            ANSELHbits.ANS9 = 1;
-            break;
-        case 10:
-            ANSELHbits.ANS10 = 1;
-            break;
-        case 11:
-            ANSELHbits.ANS11 = 1;
-            break;
-        case 12:
-            ANSELHbits.ANS12 = 1;
-            break;
-        case 13:
-            ANSELHbits.ANS13 = 1;
-            break;
-    }
+void Nibbles_H(uint8_t datoH) {
+    uint8_t temp = datoH;
+    temp = (temp >> 4);
+    uint8_t nlh = (temp & 0b00001111);
+    tabla7segmentos(nlh);
 }
 
-void Select_ch(uint8_t channel) {
-    switch (channel) {
+void tabla7segmentos(uint8_t valor) {
+    switch (valor) {
         case 0:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01110111;
             break;
         case 1:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01000001;
             break;
         case 2:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b00111011;
             break;
         case 3:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01101011;
             break;
         case 4:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01001101;
             break;
         case 5:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01101110;
             break;
         case 6:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01111110;
             break;
         case 7:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
+            PORTC = 0b01000011;
             break;
         case 8:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b01111111;
             break;
         case 9:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b01101111;
             break;
         case 10:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b01011111;
             break;
         case 11:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b01111100;
             break;
         case 12:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b00110110;
             break;
         case 13:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b01111001;
             break;
         case 14:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b00111110;
             break;
         case 15:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
+            PORTC = 0b00011110;
             break;
     }
-    ADCON0bits.GO = 1;
 }

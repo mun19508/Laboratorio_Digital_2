@@ -2673,8 +2673,11 @@ void configuracion(void);
 
 
 volatile uint8_t display_adc;
-uint8_t nibble_l;
-uint8_t nibble_h;
+uint8_t nibble_MS;
+uint8_t nibble_LS;
+uint8_t count;
+uint8_t auxiliar;
+uint8_t toogle = 0;
 
 
 
@@ -2684,7 +2687,21 @@ void __attribute__((picinterrupt(("")))) ISR(void) {
         display_adc = ADRESH;
         ADCON0bits.GO = 1;
     }
+    if (INTCONbits.T0IF == 1) {
+        PORTE = multiplex(count, 2);
+        auxiliar = display_adc;
+        PORTC = 0;
 
+        if (toogle == 0) {
+          Nibbles_L(display_adc);
+            toogle++;
+        } else {
+         Nibbles_H(display_adc);
+            toogle--;
+        }
+        TMR0 = 177;
+        INTCONbits.T0IF = 0;
+    }
 }
 
 
@@ -2692,6 +2709,14 @@ void main(void) {
 
     INTCONbits.GIE = 1;
     INTCONbits.PEIE = 1;
+    INTCONbits.T0IE = 1;
+    INTCONbits.T0IF = 0;
+    OPTION_REGbits.T0CS = 0;
+    OPTION_REGbits.PSA = 0;
+    OPTION_REGbits.PS0 = 1;
+    OPTION_REGbits.PS1 = 0;
+    OPTION_REGbits.PS2 = 1;
+    TMR0 = 177;
 
     ANSEL = 0;
     ANSELH = 0;
@@ -2711,7 +2736,7 @@ void main(void) {
     PORTC = 0;
     PORTD = 0;
     PORTE = 0;
-    while(1){
+    while (1) {
 
     }
 }

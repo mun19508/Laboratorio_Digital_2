@@ -30,8 +30,11 @@ void configuracion(void);
 
 //********************************Variables*************************************
 volatile uint8_t display_adc;
-uint8_t nibble_l;
-uint8_t nibble_h;
+uint8_t nibble_MS;
+uint8_t nibble_LS;
+uint8_t count;
+uint8_t auxiliar;
+uint8_t toogle = 0;
 //******************************************************************************
 //******************************Interrupciones**********************************
 
@@ -41,7 +44,23 @@ void __interrupt() ISR(void) {
         display_adc = ADRESH;
         ADCON0bits.GO = 1;
     }
+    if (INTCONbits.T0IF == 1) {
+        auxiliar = display_adc;
+        PORTC = 0;
+        PORTE = 0;
 
+        if (toogle == 0) {
+            Nibbles_L(display_adc);
+            PORTEbits.RE0 = 1;
+            toogle++;
+        } else {
+            Nibbles_H(display_adc);
+            toogle--;
+            PORTEbits.RE1 = 1;
+        }
+        TMR0 = 177;
+        INTCONbits.T0IF = 0;
+    }
 }
 //******************************************************************************
 
@@ -49,6 +68,14 @@ void main(void) {
     //-----------------------Interrupciones---------------------------------
     INTCONbits.GIE = 1; //Se habilitan ISR globales
     INTCONbits.PEIE = 1; //Se habilitan ISR perifericas
+    INTCONbits.T0IE = 1;
+    INTCONbits.T0IF = 0;
+    OPTION_REGbits.T0CS = 0;
+    OPTION_REGbits.PSA = 0;
+    OPTION_REGbits.PS0 = 1;
+    OPTION_REGbits.PS1 = 0;
+    OPTION_REGbits.PS2 = 1;
+    TMR0 = 177;
     //--------------------------Canal Analogico---------------------------------
     ANSEL = 0;
     ANSELH = 0; //Puerto A y B como digitales
@@ -68,7 +95,7 @@ void main(void) {
     PORTC = 0;
     PORTD = 0;
     PORTE = 0; //Se limpian los puertos
-    while(1){
-    
+    while (1) {
+
     }
 }

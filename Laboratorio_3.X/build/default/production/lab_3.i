@@ -1,4 +1,4 @@
-# 1 "lab_2.c"
+# 1 "lab_3.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,7 +6,8 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "lab_2.c" 2
+# 1 "lab_3.c" 2
+
 
 
 
@@ -2636,129 +2637,9 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 8 "lab_2.c" 2
-
-# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 9 "lab_2.c" 2
-
-# 1 "./ADC_LIB.h" 1
-# 14 "./ADC_LIB.h"
-# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 14 "./ADC_LIB.h" 2
-
-void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
-void Select_ch(uint8_t channel);
-void start_ch(uint8_t channel);
-# 10 "lab_2.c" 2
-
-# 1 "./display_7s.h" 1
-# 12 "./display_7s.h"
-# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 12 "./display_7s.h" 2
-
-
-void izquierdo(uint8_t);
-void derecho(uint8_t );
-void tabla7segmentos(uint8_t valor);
-# 11 "lab_2.c" 2
-
-
-
-
-#pragma config FOSC = INTRC_NOCLKOUT
-#pragma config WDTE = OFF
-#pragma config PWRTE = OFF
-#pragma config MCLRE = OFF
-#pragma config CP = OFF
-#pragma config CPD = OFF
-#pragma config BOREN = OFF
-#pragma config IESO = OFF
-#pragma config FCMEN = OFF
-#pragma config LVP = OFF
-
-#pragma config BOR4V = BOR40V
-#pragma config WRT = OFF
-
-
-void configuracion(void);
-
-
-volatile uint8_t display_adc;
-uint8_t nibble_MS;
-uint8_t nibble_LS;
-uint8_t count;
-uint8_t auxiliar;
-uint8_t toogle = 0;
-uint8_t valor_ant;
-uint8_t valor_act;
-
-
-
-void __attribute__((picinterrupt(("")))) ISR(void) {
-    if (PIR1bits.ADIF == 1) {
-        PIR1bits.ADIF = 0;
-        display_adc = ADRESH;
-        ADCON0bits.GO = 1;
-    }
-    if (INTCONbits.T0IF == 1) {
-        auxiliar = display_adc;
-        PORTC = 0;
-        PORTE = 0;
-
-        if (toogle == 0) {
-         izquierdo(display_adc);
-            PORTEbits.RE0 = 1;
-            toogle++;
-        } else {
-         derecho(display_adc);
-            toogle--;
-            PORTEbits.RE1 = 1;
-        }
-        TMR0 = 177;
-        INTCONbits.T0IF = 0;
-    }
-    if(INTCONbits.RBIF == 1){
-
-    }
-}
+# 9 "lab_3.c" 2
 
 
 void main(void) {
-
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.T0IE = 1;
-    INTCONbits.T0IF = 0;
-    INTCONbits.RBIE = 1;
-    INTCONbits.RBIF = 0;
-    IOCBbits.IOCB0 = 1;
-    IOCBbits.IOCB1 = 1;
-    OPTION_REGbits.T0CS = 0;
-    OPTION_REGbits.PSA = 0;
-    OPTION_REGbits.PS0 = 1;
-    OPTION_REGbits.PS1 = 0;
-    OPTION_REGbits.PS2 = 1;
-    TMR0 = 177;
-
-    ANSEL = 0;
-    ANSELH = 0;
-    start_adc(2, 1, 0, 0);
-    start_ch(8);
-    Select_ch(8);
-
-    TRISA = 0;
-    TRISC = 0;
-    TRISD = 0;
-    TRISE = 0;
-    TRISBbits.TRISB0 = 1;
-    TRISBbits.TRISB1 = 1;
-    TRISBbits.TRISB2 = 1;
-
-    PORTA = 0;
-    PORTC = 0;
-    PORTD = 0;
-    PORTE = 0;
-    while (1) {
-
-    }
+    return;
 }

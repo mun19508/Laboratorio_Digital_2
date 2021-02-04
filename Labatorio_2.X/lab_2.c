@@ -8,6 +8,7 @@
 #include <xc.h>
 #include <stdint.h>
 #include "ADC_LIB.h"
+#include "display_7s.h"
 //******************************************************************************
 //***************************Bits de ConFig*************************************
 // CONFIG1
@@ -35,6 +36,8 @@ uint8_t nibble_LS;
 uint8_t count;
 uint8_t auxiliar;
 uint8_t toogle = 0;
+uint8_t valor_ant;
+uint8_t valor_act;
 //******************************************************************************
 //******************************Interrupciones**********************************
 
@@ -50,16 +53,19 @@ void __interrupt() ISR(void) {
         PORTE = 0;
 
         if (toogle == 0) {
-            Nibbles_L(display_adc);
+         izquierdo(display_adc);
             PORTEbits.RE0 = 1;
             toogle++;
         } else {
-            Nibbles_H(display_adc);
+         derecho(display_adc);
             toogle--;
             PORTEbits.RE1 = 1;
         }
         TMR0 = 177;
         INTCONbits.T0IF = 0;
+    }
+    if(INTCONbits.RBIF == 1){
+        
     }
 }
 //******************************************************************************
@@ -70,6 +76,10 @@ void main(void) {
     INTCONbits.PEIE = 1; //Se habilitan ISR perifericas
     INTCONbits.T0IE = 1;
     INTCONbits.T0IF = 0;
+    INTCONbits.RBIE = 1;
+    INTCONbits.RBIF = 0;
+    IOCBbits.IOCB0 = 1;
+    IOCBbits.IOCB1 = 1;
     OPTION_REGbits.T0CS = 0;
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.PS0 = 1;

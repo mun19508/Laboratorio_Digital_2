@@ -5,21 +5,10 @@
  * Created on 3 de febrero de 2021, 10:09 PM
  */
 
-#include <xc.h>
-#include <stdint.h>
+
 #include "display_7s.h"
 
-void Nibbles_L(uint8_t datoL) {
-    uint8_t nsl = (datoL & 0b00001111);
-    tabla7segmentos(nsl);
-}
 
-void Nibbles_H(uint8_t datoH) {
-    uint8_t temp = datoH;
-    temp = (temp >> 4);
-    uint8_t nlh = (temp & 0b00001111);
-    tabla7segmentos(nlh);
-}
 
 void tabla7segmentos(uint8_t valor) {
     switch (valor) {
@@ -73,6 +62,22 @@ void tabla7segmentos(uint8_t valor) {
             break;
     }
 }
+
+void derecho(uint8_t adcHs) {
+    uint8_t temp = adcHs;
+    temp = (temp >> 4);
+    uint8_t nlh = (temp & 0b00001111);
+    tabla7segmentos(nlh);
+    return;
+}
+void izquierdo(uint8_t adcLs) {
+    uint8_t nsl = (adcLs & 0b00001111);
+    tabla7segmentos(nsl);
+    return;
+}
+
+
+
 
 /*uint8_t multiplex(uint8_t port, uint8_t cantidad_D7S) {
     static uint8_t contador[] = {0x00,

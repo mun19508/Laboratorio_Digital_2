@@ -11,8 +11,8 @@
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 
-void Nibbles_L(uint8_t datoL);
-void Nibbles_H(uint8_t datoH);
+void izquierdo(uint8_t);
+void derecho(uint8_t );
 void tabla7segmentos(uint8_t valor);
 //uint8_t multiplex(uint8_t port, uint8_t cantidad_D7S);
 

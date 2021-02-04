@@ -14,6 +14,9 @@
 
 
 
+
+# 1 "./display_7s.h" 1
+# 11 "./display_7s.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -2636,34 +2639,19 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 8 "display_7s.c" 2
+# 11 "./display_7s.h" 2
 
-# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 9 "display_7s.c" 2
-
-# 1 "./display_7s.h" 1
-# 12 "./display_7s.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
 # 12 "./display_7s.h" 2
 
 
-void Nibbles_L(uint8_t datoL);
-void Nibbles_H(uint8_t datoH);
+void izquierdo(uint8_t);
+void derecho(uint8_t );
 void tabla7segmentos(uint8_t valor);
-# 10 "display_7s.c" 2
+# 9 "display_7s.c" 2
 
 
-void Nibbles_L(uint8_t datoL) {
-    uint8_t nsl = (datoL & 0b00001111);
-    tabla7segmentos(nsl);
-}
 
-void Nibbles_H(uint8_t datoH) {
-    uint8_t temp = datoH;
-    temp = (temp >> 4);
-    uint8_t nlh = (temp & 0b00001111);
-    tabla7segmentos(nlh);
-}
 
 void tabla7segmentos(uint8_t valor) {
     switch (valor) {
@@ -2716,4 +2704,17 @@ void tabla7segmentos(uint8_t valor) {
             PORTC = 0b00011110;
             break;
     }
+}
+
+void derecho(uint8_t adcHs) {
+    uint8_t temp = adcHs;
+    temp = (temp >> 4);
+    uint8_t nlh = (temp & 0b00001111);
+    tabla7segmentos(nlh);
+    return;
+}
+void izquierdo(uint8_t adcLs) {
+    uint8_t nsl = (adcLs & 0b00001111);
+    tabla7segmentos(nsl);
+    return;
 }

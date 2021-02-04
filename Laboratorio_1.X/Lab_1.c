@@ -28,37 +28,38 @@
 void config(void);
 void semaforo(void);
 //********************************Variables*************************************
-int start = 0;           //Utilizada para indicar si la carrera comenzo.
-int J1 = 0;             //Es el contador del jugador 1.
-int J2 = 0;            //Es contador del jugador 2.
+int start = 0; //Utilizada para indicar si la carrera comenzo.
+int J1 = 0; //Es el contador del jugador 1.
+int J2 = 0; //Es contador del jugador 2.
 //******************************************************************************
+
 void main(void) {
     config();
     while (1) {
         if (PORTBbits.RB0 == 0 && start == 0) { //Se comprueba si el boton fue 
-            __delay_us(150);                    //presionado.
-            if (PORTBbits.RB0 == 1) {           //Se asegura que el boton se solto
-                PORTE = 0;     //Se asegura que el LED que indica al ganador este apagado 
-                J1 = 0;        
-                J2 = 0;     //se asegura que los contadores esten en 0.
-                semaforo(); 
+            __delay_us(150); //presionado.
+            if (PORTBbits.RB0 == 1) { //Se asegura que el boton se solto
+                PORTE = 0; //Se asegura que el LED que indica al ganador este apagado 
+                J1 = 0;
+                J2 = 0; //se asegura que los contadores esten en 0.
+                semaforo();
                 start = 1; //se indica que la carrera comenzo.
             }
         }
         if (PORTBbits.RB1 == 0 && start == 1) { //Misma logica que el boton que
-            __delay_us(150);                    //esta en RB0
+            __delay_us(150); //esta en RB0
             if (PORTBbits.RB1 == 1) {
-                if (J1 == 0) {         //Al momento de comenzar la carrera unicamente 
-                    J1++;               //se incrementa el puerto y el contador.
+                if (J1 == 0) { //Al momento de comenzar la carrera unicamente 
+                    J1++; //se incrementa el puerto y el contador.
                     PORTAbits.RA0 = 1;
-                } else {        //En caso sea la segunda vez que se presiona el boton
+                } else { //En caso sea la segunda vez que se presiona el boton
                     PORTA = (PORTA << 1); //tras iniciada la carrera, se incrementa
-                    J1++;               //el contador y se rota a la izquierda el
-                }               //valor del puerto.
+                    J1++; //el contador y se rota a la izquierda el
+                } //valor del puerto.
             }
         }
         if (PORTBbits.RB2 == 0 && start == 1) {//La logica es la misma que el boton
-            __delay_us(150);                //que esta en RB0.
+            __delay_us(150); //que esta en RB0.
             if (PORTBbits.RB2 == 1) {//Es la misma logica que el boton de RB1.
                 if (J2 == 0) {
                     J2++;
@@ -73,11 +74,11 @@ void main(void) {
             if (J1 == 8) { //se enciende el Led correspondiente a quien haya llegado  
                 PORTEbits.RE0 = 1; //primero.
             } else {//Esta rutina unicamente se realiza si uno de los contadores 
-                PORTEbits.RE1 = 1;//igual a 8, por ello si J1 no llega a 8 J2 fue
+                PORTEbits.RE1 = 1; //igual a 8, por ello si J1 no llega a 8 J2 fue
             }//el que llego.
             PORTA = 0;
             PORTC = 0;
-            start = 0;//Se regresa al estado inicial
+            start = 0; //Se regresa al estado inicial
         }
     }
 }

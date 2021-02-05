@@ -31,60 +31,68 @@ void configuracion(void);
 
 //********************************Variables*************************************
 volatile uint8_t display_adc;
-uint8_t nibble_MS;
-uint8_t nibble_LS;
 uint8_t count;
-uint8_t auxiliar;
 uint8_t toogle = 0;
-uint8_t valor_ant;
-uint8_t valor_act;
+uint8_t antireb = 0;
+uint8_t antireb_ant = 0;
 //******************************************************************************
 //******************************Interrupciones**********************************
 
 void __interrupt() ISR(void) {
-    if (PIR1bits.ADIF == 1) {
+    if (PIR1bits.ADIF == 1) { //si la bandera del ADC se enciende
         PIR1bits.ADIF = 0;
-        display_adc = ADRESH;
+        display_adc = ADRESH; //se guarda el valor convertido en la variable
         ADCON0bits.GO = 1;
     }
-    if (INTCONbits.T0IF == 1) {
-        auxiliar = display_adc;
-        PORTC = 0;
-        PORTE = 0;
+    if (INTCONbits.T0IF == 1) {// si la bandera del Timer 0 es 1
+        PORTC = 0; 
+        PORTE = 0; //Se asegura que los puertos esten limpios
 
-        if (toogle == 0) {
-         izquierdo(display_adc);
+        if (toogle == 0) { //debido a que solo hay dos Displays el contador solo puede
+            NibbleMS(display_adc); //0 o 1.
             PORTEbits.RE0 = 1;
-            toogle++;
+            toogle++; //se aumentar el contador para que en la sig ISR muestre el otro nibble
         } else {
-         derecho(display_adc);
-            toogle--;
+            NibbleLS(display_adc);
+            toogle--; //misma logica de la linea 56 de este archivo.
             PORTEbits.RE1 = 1;
         }
-        TMR0 = 177;
-        INTCONbits.T0IF = 0;
+        TMR0 = 177; //se vuelve a iniciar el timer
+        INTCONbits.T0IF = 0; 
     }
-    if(INTCONbits.RBIF == 1){
-        
+    if (INTCONbits.RBIF == 1) { //Se trabaja con botones en config. pull-up
+        antireb = antireb_ant; 
+        antireb_ant = PORTB;
+        if ((antireb_ant & 0b00000011) == 3) { //Se asegura que B0 y B1 fueron soltados.
+            if ((antireb & 0b00000011) == 2) {//Compruba si en la anterior interrupción B0 fue presionado.
+                count++; 
+                PORTD++; //Aumenta el valor del contador y del puerto
+            }
+            if ((antireb & 0b00000011) == 1) {//Compruba si en la anterior interrupción B1 fue presionado.
+                count--;
+                PORTD--; //Disminuye el valor del contador y del puerto
+            }
+        }
+        INTCONbits.RBIF = 0;
     }
 }
 //******************************************************************************
 
 void main(void) {
     //-----------------------Interrupciones---------------------------------
-    INTCONbits.GIE = 1; //Se habilitan ISR globales
-    INTCONbits.PEIE = 1; //Se habilitan ISR perifericas
-    INTCONbits.T0IE = 1;
+    INTCONbits.GIE = 1; //Se habilitan ISR globales.
+    INTCONbits.PEIE = 1; //Se habilitan ISR perifericas.
+    INTCONbits.T0IE = 1; //Se habilita la ISR del Timer 0.
     INTCONbits.T0IF = 0;
-    INTCONbits.RBIE = 1;
+    INTCONbits.RBIE = 1; //Se habilita la ISR del por cambios.
     INTCONbits.RBIF = 0;
-    IOCBbits.IOCB0 = 1;
-    IOCBbits.IOCB1 = 1;
-    OPTION_REGbits.T0CS = 0;
+    IOCBbits.IOCB0 = 1; 
+    IOCBbits.IOCB1 = 1; //Se habilita individualmente la lectura de los cambios.
+    OPTION_REGbits.T0CS = 0;//Reloj interno
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.PS0 = 1;
     OPTION_REGbits.PS1 = 0;
-    OPTION_REGbits.PS2 = 1;
+    OPTION_REGbits.PS2 = 1;// Se configura un prescaler de 1/64
     TMR0 = 177;
     //--------------------------Canal Analogico---------------------------------
     ANSEL = 0;
@@ -106,6 +114,10 @@ void main(void) {
     PORTD = 0;
     PORTE = 0; //Se limpian los puertos
     while (1) {
-
+        if (display_adc >= count) { // se comprueba si el valor del ADC es mayor o igual al del contador
+            PORTEbits.RE2 = 1; //se enciende la alarma.
+        } else {
+            PORTEbits.RE2 = 0; //sino se apaga.
+        }
     }
 }

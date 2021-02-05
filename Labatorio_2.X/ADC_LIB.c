@@ -1,7 +1,15 @@
+/*
+ * File:   ADC_LIB.c
+ * Author: Daniel Mundo
+ *Descripcion: Se definen la operaciones a realizar por las funciones previamente
+ *             definidas en el archivo ADC_LIB.h
+ */
+
 #include "ADC_LIB.h"
+#define _XTAL_FREQ 4000000
 
 void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL) {
-    ADCON0bits.ADON = 1;
+    ADCON0bits.ADON = 1;                                              
     switch (frec) {
         case 1: // Fosc/2
             ADCON0bits.ADCS0 = 0;
@@ -48,7 +56,6 @@ void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL) {
             break;
     }
 }
-
 void start_ch(uint8_t channel) { //Habilita los canales del ADC 
     switch (channel) {
         case 0: //Analogico en pin RA0
@@ -95,8 +102,7 @@ void start_ch(uint8_t channel) { //Habilita los canales del ADC
             break;
     }
 }
-
-void Select_ch(uint8_t channel) {
+void Select_ch(uint8_t channel) {// se selecciona el canal analogico y se inicia la conversion
     switch (channel) {
         case 0: // AN0
             ADCON0bits.CHS0 = 0;
@@ -195,5 +201,6 @@ void Select_ch(uint8_t channel) {
             ADCON0bits.CHS3 = 1;
             break;
     }
+    __delay_us(4);   //es el tiempo recomendado de espera por cada cambio de canal
     ADCON0bits.GO = 1;
 }

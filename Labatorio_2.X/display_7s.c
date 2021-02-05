@@ -1,102 +1,74 @@
 /*
  * File:   display_7S.c
- * Author: Daniel
- *
- * Created on 3 de febrero de 2021, 10:09 PM
+ * Author: Daniel Mundo
+ *Descripcion: Se definen la operaciones a realizar por las funciones previamente
+ *             definidas en el archivo display_7.h
  */
-
 
 #include "display_7s.h"
 
-
-
-void tabla7segmentos(uint8_t valor) {
-    switch (valor) {
-        case 0:
+void tabla7segmentos(uint8_t valor) {//en este case se obtiene el valor que debe de
+    switch (valor) {                //tener el puerto para mostrar los numeros en los display
+        case 0: //0
             PORTC = 0b01110111;
             break;
-        case 1:
+        case 1: //1
             PORTC = 0b01000001;
             break;
-        case 2:
+        case 2: //2
             PORTC = 0b00111011;
             break;
-        case 3:
+        case 3: //3
             PORTC = 0b01101011;
             break;
-        case 4:
+        case 4: //4
             PORTC = 0b01001101;
             break;
-        case 5:
+        case 5: //5
             PORTC = 0b01101110;
             break;
-        case 6:
+        case 6: //6
             PORTC = 0b01111110;
             break;
-        case 7:
+        case 7: //7
             PORTC = 0b01000011;
             break;
-        case 8:
+        case 8: //8
             PORTC = 0b01111111;
             break;
-        case 9:
+        case 9: //9
             PORTC = 0b01101111;
             break;
-        case 10:
+        case 10: //A
             PORTC = 0b01011111;
             break;
-        case 11:
+        case 11: //b
             PORTC = 0b01111100;
-            break;
+            break; //C
         case 12:
             PORTC = 0b00110110;
             break;
-        case 13:
+        case 13: //d
             PORTC = 0b01111001;
             break;
-        case 14:
+        case 14: //E
             PORTC = 0b00111110;
             break;
-        case 15:
+        case 15: //F
             PORTC = 0b00011110;
             break;
     }
 }
 
-void derecho(uint8_t adcHs) {
-    uint8_t temp = adcHs;
-    temp = (temp >> 4);
-    uint8_t nlh = (temp & 0b00001111);
+void NibbleMS(uint8_t adcMs) { //Se recupera el nibble mas significativo 
+    uint8_t temp = adcMs;
+    temp = (temp >> 4); //se realiza una especie de swap entre los nibbles
+    uint8_t nlh = (temp & 0b00001111); //se realiza lo mismo que NibbleLS
     tabla7segmentos(nlh);
     return;
 }
-void izquierdo(uint8_t adcLs) {
-    uint8_t nsl = (adcLs & 0b00001111);
-    tabla7segmentos(nsl);
+void NibbleLS(uint8_t adcLs) { //Se recupera el nibble menos significativo
+    uint8_t nsl = (adcLs & 0b00001111);//se hace un "and" para mantener unicamente 
+    tabla7segmentos(nsl);             //el nibble menos significativo
     return;
 }
-
-
-
-
-/*uint8_t multiplex(uint8_t port, uint8_t cantidad_D7S) {
-    static uint8_t contador[] = {0x00,
-        0x01,
-        0x02,
-        0x04,
-        0x08,
-        0x10,
-        0x20,
-        0x40,
-        0x80};
-    if (port == contador[cantidad_D7S]) {
-        port = 0;
-    }
-    if (port > 0) {
-        port = (port << 1);
-    }
-    if (port == 0) {
-        port++;
-    }
-    return port;
-}*/

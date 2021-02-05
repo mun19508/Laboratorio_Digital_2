@@ -2642,9 +2642,9 @@ extern __bank0 __bit __timeout;
 # 9 "lab_2.c" 2
 
 # 1 "./ADC_LIB.h" 1
-# 14 "./ADC_LIB.h"
+# 11 "./ADC_LIB.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 14 "./ADC_LIB.h" 2
+# 11 "./ADC_LIB.h" 2
 
 void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
 void Select_ch(uint8_t channel);
@@ -2652,13 +2652,13 @@ void start_ch(uint8_t channel);
 # 10 "lab_2.c" 2
 
 # 1 "./display_7s.h" 1
-# 12 "./display_7s.h"
+# 11 "./display_7s.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 12 "./display_7s.h" 2
+# 11 "./display_7s.h" 2
 
 
-void izquierdo(uint8_t);
-void derecho(uint8_t );
+void NibbleMS(uint8_t);
+void NibbleLS(uint8_t );
 void tabla7segmentos(uint8_t valor);
 # 11 "lab_2.c" 2
 
@@ -2684,13 +2684,10 @@ void configuracion(void);
 
 
 volatile uint8_t display_adc;
-uint8_t nibble_MS;
-uint8_t nibble_LS;
 uint8_t count;
-uint8_t auxiliar;
 uint8_t toogle = 0;
-uint8_t valor_ant;
-uint8_t valor_act;
+uint8_t antireb = 0;
+uint8_t antireb_ant = 0;
 
 
 
@@ -2701,24 +2698,35 @@ void __attribute__((picinterrupt(("")))) ISR(void) {
         ADCON0bits.GO = 1;
     }
     if (INTCONbits.T0IF == 1) {
-        auxiliar = display_adc;
         PORTC = 0;
         PORTE = 0;
 
         if (toogle == 0) {
-         izquierdo(display_adc);
+            NibbleMS(display_adc);
             PORTEbits.RE0 = 1;
             toogle++;
         } else {
-         derecho(display_adc);
+            NibbleLS(display_adc);
             toogle--;
             PORTEbits.RE1 = 1;
         }
         TMR0 = 177;
         INTCONbits.T0IF = 0;
     }
-    if(INTCONbits.RBIF == 1){
-
+    if (INTCONbits.RBIF == 1) {
+        antireb = antireb_ant;
+        antireb_ant = PORTB;
+        if ((antireb_ant & 0b00000011) == 3) {
+            if ((antireb & 0b00000011) == 2) {
+                count++;
+                PORTD++;
+            }
+            if ((antireb & 0b00000011) == 1) {
+                count--;
+                PORTD--;
+            }
+        }
+        INTCONbits.RBIF = 0;
     }
 }
 
@@ -2759,6 +2767,10 @@ void main(void) {
     PORTD = 0;
     PORTE = 0;
     while (1) {
-
+        if (display_adc >= count) {
+            PORTEbits.RE2 = 1;
+        } else {
+            PORTEbits.RE2 = 0;
+        }
     }
 }

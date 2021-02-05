@@ -1,8 +1,7 @@
-/* 
- * File:   
- * Author: 
- * Comments:
- * Revision history: 
+/*
+ * File:   display_7s.h
+ * Author: Daniel Mundo
+ *Descripcion: Se definen los prototipos de funciones a emplear por la libreria.
  */
 
 #ifndef DISPLAY_7S_H
@@ -11,10 +10,9 @@
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 
-void izquierdo(uint8_t);
-void derecho(uint8_t );
+void NibbleMS(uint8_t);
+void NibbleLS(uint8_t );
 void tabla7segmentos(uint8_t valor);
-//uint8_t multiplex(uint8_t port, uint8_t cantidad_D7S);
 
 #endif	/* DISPLAY_7S_H */
 

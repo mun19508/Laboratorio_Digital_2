@@ -1,16 +1,13 @@
-/* 
- * File:   
- * Author: 
- * Comments:
- * Revision history: 
+/*
+ * File:   display_7s.h
+ * Author: Daniel Mundo
+ *Descripcion: Se definen los prototipos de funciones a emplear por la libreria.
  */
-
-// This is a guard condition so that contents of this file are not included
-// more than once.  
+ 
 #ifndef ADC_LIB_H
 #define	ADC_LIB_H
 
-#include <xc.h> // include processor files - each processor file is guarded.  
+#include <xc.h> 
 #include <stdint.h>
 void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
 void Select_ch(uint8_t channel);

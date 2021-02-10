@@ -91,6 +91,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "39 ./LCD.h
 [; ;./LCD.h: 39: void convert(char *data,float a, int place);
 [v _convert `(v ~T0 @X0 0 ef3`*uc`f`i ]
+"44 ./UART.h
+[; ;./UART.h: 44: void UARTSendString(const char* str, const uint8_t max_length);
+[v _UARTSendString `(v ~T0 @X0 0 ef2`*Cuc`Cuc ]
 [v F36 `(v ~T0 @X0 1 tf1`ul ]
 "12 C:\Program Files\Microchip\xc8\v2.31\pic\include\builtins.h
 [v __delay `JF36 ~T0 @X0 0 e ]
@@ -330,300 +333,363 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;C:\Program Files\Microchip\xc8\v2.31\pic\include\proc\pic16f887.h: 3547: __asm("EECON2 equ 018Dh");
 [; <" EECON2 equ 018Dh ;# ">
 "17 lab_3.c
-[; ;lab_3.c: 17:     ANSELH = 0;
+[; ;lab_3.c: 17: void main(void) {
 [p x FOSC  =  INTRC_NOCLKOUT ]
 "18
-[; ;lab_3.c: 18:     start_adc(2, 0, 0, 0);
+[; ;lab_3.c: 18: 
 [p x WDTE  =  OFF        ]
 "19
-[; ;lab_3.c: 19:     start_ch(12);
+[; ;lab_3.c: 19:     ANSEL = 0;
 [p x PWRTE  =  OFF       ]
 "20
-[; ;lab_3.c: 20:     start_ch(10);
+[; ;lab_3.c: 20:     ANSELH = 0;
 [p x MCLRE  =  OFF       ]
 "21
-[; ;lab_3.c: 21:     Select_ch(12);
+[; ;lab_3.c: 21:     start_adc(2, 0, 0, 0);
 [p x CP  =  OFF          ]
 "22
-[; ;lab_3.c: 22: 
+[; ;lab_3.c: 22:     start_ch(12);
 [p x CPD  =  OFF         ]
 "23
-[; ;lab_3.c: 23:     UARTInit(9600, 1);
+[; ;lab_3.c: 23:     start_ch(10);
 [p x BOREN  =  OFF       ]
 "24
-[; ;lab_3.c: 24: 
+[; ;lab_3.c: 24:     Select_ch(12);
 [p x IESO  =  OFF        ]
 "25
-[; ;lab_3.c: 25:     TRISA = 0;
+[; ;lab_3.c: 25: 
 [p x FCMEN  =  OFF       ]
 "26
-[; ;lab_3.c: 26:     TRISCbits.TRISC6 = 0;
+[; ;lab_3.c: 26:     UARTInit(9600, 1);
 [p x LVP  =  OFF         ]
 "28
-[; ;lab_3.c: 28:     TRISD = 0;
+[; ;lab_3.c: 28:     TRISA = 0;
 [p x BOR4V  =  BOR40V    ]
 "29
-[; ;lab_3.c: 29:     TRISE = 0;
+[; ;lab_3.c: 29:     TRISCbits.TRISC6 = 0;
 [p x WRT  =  OFF         ]
 "32
-[; ;lab_3.c: 32:     PORTA = 0;
+[; ;lab_3.c: 32:     TRISE = 0;
 [v _canal_act `uc ~T0 @X0 1 e ]
 [i _canal_act
 -> -> 0 `i `uc
 ]
 "33
-[; ;lab_3.c: 33:     PORTB = 0;
+[; ;lab_3.c: 33:     TRISB = 255;
 [v _var_adc0 `Vuc ~T0 @X0 1 e ]
 [i _var_adc0
 -> -> 0 `i `uc
 ]
 "34
-[; ;lab_3.c: 34:     PORTC = 0;
+[; ;lab_3.c: 34: 
 [v _var_adc1 `Vuc ~T0 @X0 1 e ]
 [i _var_adc1
 -> -> 0 `i `uc
 ]
 "35
-[; ;lab_3.c: 35:     PORTD = 0;
+[; ;lab_3.c: 35:     PORTA = 0;
 [v _cont_uart `f ~T0 @X0 1 e ]
 [i _cont_uart
 -> -> 0 `i `f
 ]
 "36
-[; ;lab_3.c: 36:     PORTE = 0;
+[; ;lab_3.c: 36:     PORTB = 0;
 [v _string_uart `uc ~T0 @X0 -> 10 `i e ]
 "37
-[; ;lab_3.c: 37: 
+[; ;lab_3.c: 37:     PORTC = 0;
 [v _valor_uart `uc ~T0 @X0 1 e ]
 [i _valor_uart
 -> -> 0 `i `uc
 ]
 "38
-[; ;lab_3.c: 38:     Lcd_Init();
+[; ;lab_3.c: 38:     PORTD = 0;
 [v _adc0 `uc ~T0 @X0 -> 10 `i e ]
 "39
-[; ;lab_3.c: 39:     Lcd_Clear();
+[; ;lab_3.c: 39:     PORTE = 0;
 [v _adc1 `uc ~T0 @X0 -> 10 `i e ]
 "40
 [; ;lab_3.c: 40: 
+[v _fin_linea `c ~T0 @X0 1 e ]
+[i _fin_linea
+-> -> 3 `i `c
+]
+"41
+[; ;lab_3.c: 41:     Lcd_Init();
 [v _conv0 `f ~T0 @X0 1 e ]
 [i _conv0
 -> -> 0 `i `f
 ]
-"41
-[; ;lab_3.c: 41:     while (1) {
+"42
+[; ;lab_3.c: 42:     Lcd_Clear();
 [v _conv1 `f ~T0 @X0 1 e ]
 [i _conv1
 -> -> 0 `i `f
 ]
 [v $root$_main `(v ~T0 @X0 0 e ]
-"45
-[; ;lab_3.c: 45:         Lcd_Write_String("S2:");
+"48
+[; ;lab_3.c: 48:         Lcd_Write_String("S2:");
 [v _main `(v ~T0 @X0 1 ef ]
 {
 [e :U _main ]
 [f ]
-"47
-[; ;lab_3.c: 47:         Lcd_Write_String("S3:");
-[e = _ANSEL -> -> 0 `i `uc ]
-"48
-[; ;lab_3.c: 48:         if (PIR1bits.ADIF == 1) {
-[e = _ANSELH -> -> 0 `i `uc ]
-"49
-[; ;lab_3.c: 49:             if (canal_act == 0) {
-[e ( _start_adc (4 , , , -> -> 2 `i `uc -> -> 0 `i `uc -> -> 0 `i `uc -> -> 0 `i `uc ]
 "50
-[; ;lab_3.c: 50:                 var_adc0 = ADRESH;
-[e ( _start_ch (1 -> -> 12 `i `uc ]
+[; ;lab_3.c: 50:         Lcd_Write_String("S3:");
+[e = _ANSEL -> -> 0 `i `uc ]
 "51
-[; ;lab_3.c: 51:                 Select_ch(10);
-[e ( _start_ch (1 -> -> 10 `i `uc ]
+[; ;lab_3.c: 51:         if (PIR1bits.ADIF == 1) {
+[e = _ANSELH -> -> 0 `i `uc ]
 "52
-[; ;lab_3.c: 52:                 canal_act++;
-[e ( _Select_ch (1 -> -> 12 `i `uc ]
+[; ;lab_3.c: 52:             if (canal_act == 0) {
+[e ( _start_adc (4 , , , -> -> 2 `i `uc -> -> 0 `i `uc -> -> 0 `i `uc -> -> 0 `i `uc ]
+"53
+[; ;lab_3.c: 53:                 var_adc0 = ADRESH;
+[e ( _start_ch (1 -> -> 12 `i `uc ]
 "54
-[; ;lab_3.c: 54:                 var_adc1 = ADRESH;
-[e ( _UARTInit (2 , -> -> -> 9600 `i `l `ul -> -> 1 `i `uc ]
-"56
-[; ;lab_3.c: 56:                 canal_act--;
-[e = _TRISA -> -> 0 `i `uc ]
+[; ;lab_3.c: 54:                 Select_ch(10);
+[e ( _start_ch (1 -> -> 10 `i `uc ]
+"55
+[; ;lab_3.c: 55:                 canal_act++;
+[e ( _Select_ch (1 -> -> 12 `i `uc ]
 "57
-[; ;lab_3.c: 57:             }
-[e = . . _TRISCbits 0 6 -> -> 0 `i `uc ]
-"58
-[; ;lab_3.c: 58:             PIR1bits.ADIF = 0;
-[e = . . _TRISCbits 0 7 -> -> 1 `i `uc ]
+[; ;lab_3.c: 57:                 var_adc1 = ADRESH;
+[e ( _UARTInit (2 , -> -> -> 9600 `i `l `ul -> -> 1 `i `uc ]
 "59
-[; ;lab_3.c: 59:         }
-[e = _TRISD -> -> 0 `i `uc ]
+[; ;lab_3.c: 59:                 canal_act--;
+[e = _TRISA -> -> 0 `i `uc ]
 "60
-[; ;lab_3.c: 60:         if (UARTDataReady()) {
-[e = _TRISE -> -> 0 `i `uc ]
+[; ;lab_3.c: 60:             }
+[e = . . _TRISCbits 0 6 -> -> 0 `i `uc ]
 "61
-[; ;lab_3.c: 61:             valor_uart = UARTReadChar();
-[e = _TRISB -> -> 255 `i `uc ]
+[; ;lab_3.c: 61:             PIR1bits.ADIF = 0;
+[e = . . _TRISCbits 0 7 -> -> 1 `i `uc ]
+"62
+[; ;lab_3.c: 62:         }
+[e = _TRISD -> -> 0 `i `uc ]
 "63
-[; ;lab_3.c: 63:                 cont_uart++;
-[e = _PORTA -> -> 0 `i `uc ]
+[; ;lab_3.c: 63:         if (UARTDataReady()) {
+[e = _TRISE -> -> 0 `i `uc ]
 "64
-[; ;lab_3.c: 64:             } else if (valor_uart == '-') {
-[e = _PORTB -> -> 0 `i `uc ]
-"65
-[; ;lab_3.c: 65:                 cont_uart--;
-[e = _PORTC -> -> 0 `i `uc ]
+[; ;lab_3.c: 64:             valor_uart = UARTReadChar();
+[e = _TRISB -> -> 255 `i `uc ]
 "66
-[; ;lab_3.c: 66:             }
-[e = _PORTD -> -> 0 `i `uc ]
+[; ;lab_3.c: 66:                 cont_uart++;
+[e = _PORTA -> -> 0 `i `uc ]
 "67
-[; ;lab_3.c: 67:         }
-[e = _PORTE -> -> 0 `i `uc ]
+[; ;lab_3.c: 67:             } else if (valor_uart == '-') {
+[e = _PORTB -> -> 0 `i `uc ]
+"68
+[; ;lab_3.c: 68:                 cont_uart--;
+[e = _PORTC -> -> 0 `i `uc ]
 "69
-[; ;lab_3.c: 69:         conv0 = 0;
-[e ( _Lcd_Init ..  ]
+[; ;lab_3.c: 69:             }
+[e = _PORTD -> -> 0 `i `uc ]
 "70
-[; ;lab_3.c: 70:         conv1 = 0;
-[e ( _Lcd_Clear ..  ]
+[; ;lab_3.c: 70:         }
+[e = _PORTE -> -> 0 `i `uc ]
 "72
-[; ;lab_3.c: 72:         conv0 = (var_adc0 / (float) 255)*5;
+[; ;lab_3.c: 72:         conv0 = 0;
+[e ( _Lcd_Init ..  ]
+"73
+[; ;lab_3.c: 73:         conv1 = 0;
+[e ( _Lcd_Clear ..  ]
+"75
+[; ;lab_3.c: 75:         conv0 = (var_adc0 / (float) 255)*5;
 [e :U 140 ]
 {
-"73
-[; ;lab_3.c: 73:         convert(adc0, conv0, 2);
-[e ( _Lcd_Set_Cursor (2 , -> -> 1 `i `uc -> -> 1 `i `uc ]
-"74
-[; ;lab_3.c: 74: 
-[e ( _Lcd_Write_String (1 :s 1C ]
-"75
-[; ;lab_3.c: 75:         conv1 = (var_adc1 / (float) 255)*5;
-[e ( _Lcd_Set_Cursor (2 , -> -> 1 `i `uc -> -> 8 `i `uc ]
 "76
-[; ;lab_3.c: 76:         convert(adc1, conv1, 2);
-[e ( _Lcd_Write_String (1 :s 2C ]
+[; ;lab_3.c: 76:         convert(adc0, conv0, 2);
+[e ( _Lcd_Set_Cursor (2 , -> -> 1 `i `uc -> -> 1 `i `uc ]
 "77
-[; ;lab_3.c: 77: 
-[e ( _Lcd_Set_Cursor (2 , -> -> 1 `i `uc -> -> 15 `i `uc ]
+[; ;lab_3.c: 77:         UARTSendString("|", 3);
+[e ( _Lcd_Write_String (1 :s 1C ]
 "78
-[; ;lab_3.c: 78:         convert(string_uart, cont_uart, 1);
-[e ( _Lcd_Write_String (1 :s 3C ]
+[; ;lab_3.c: 78:         UARTSendString("S1", 6);
+[e ( _Lcd_Set_Cursor (2 , -> -> 1 `i `uc -> -> 8 `i `uc ]
 "79
-[; ;lab_3.c: 79: 
+[; ;lab_3.c: 79:         UARTSendString(":", 3);
+[e ( _Lcd_Write_String (1 :s 2C ]
+"80
+[; ;lab_3.c: 80:         UARTSendString(" ", 3);
+[e ( _Lcd_Set_Cursor (2 , -> -> 1 `i `uc -> -> 15 `i `uc ]
+"81
+[; ;lab_3.c: 81:         UARTSendString(adc0, 6);
+[e ( _Lcd_Write_String (1 :s 3C ]
+"82
+[; ;lab_3.c: 82:         UARTSendString("V", 3);
 [e $ ! == -> . . _PIR1bits 0 6 `i -> 1 `i 142  ]
 {
-"80
-[; ;lab_3.c: 80:         Lcd_Set_Cursor(2, 1);
+"83
+[; ;lab_3.c: 83:         UARTSendString(",", 3);
 [e $ ! == -> _canal_act `i -> 0 `i 143  ]
 {
-"81
-[; ;lab_3.c: 81:         Lcd_Write_String(adc0);
-[e = _var_adc0 _ADRESH ]
-"82
-[; ;lab_3.c: 82:         Lcd_Set_Cursor(2, 5);
-[e ( _Select_ch (1 -> -> 10 `i `uc ]
-"83
-[; ;lab_3.c: 83:         Lcd_Write_String("V");
-[e ++ _canal_act -> -> 1 `i `uc ]
 "84
-[; ;lab_3.c: 84: 
+[; ;lab_3.c: 84:         UARTSendString(" ", 3);
+[e = _var_adc0 _ADRESH ]
+"85
+[; ;lab_3.c: 85: 
+[e ( _Select_ch (1 -> -> 10 `i `uc ]
+"86
+[; ;lab_3.c: 86:         conv1 = (var_adc1 / (float) 255)*5;
+[e ++ _canal_act -> -> 1 `i `uc ]
+"87
+[; ;lab_3.c: 87:         convert(adc1, conv1, 2);
 }
 [e $U 144  ]
 [e :U 143 ]
 {
-"85
-[; ;lab_3.c: 85:         Lcd_Set_Cursor(2, 7);
-[e = _var_adc1 _ADRESH ]
-"86
-[; ;lab_3.c: 86:         Lcd_Write_String(adc1);
-[e ( _Select_ch (1 -> -> 12 `i `uc ]
-"87
-[; ;lab_3.c: 87:         Lcd_Set_Cursor(2, 11);
-[e -- _canal_act -> -> 1 `i `uc ]
 "88
-[; ;lab_3.c: 88:         Lcd_Write_String("V");
+[; ;lab_3.c: 88:         UARTSendString("S2", 6);
+[e = _var_adc1 _ADRESH ]
+"89
+[; ;lab_3.c: 89:         UARTSendString(":", 3);
+[e ( _Select_ch (1 -> -> 12 `i `uc ]
+"90
+[; ;lab_3.c: 90:         UARTSendString(" ", 3);
+[e -- _canal_act -> -> 1 `i `uc ]
+"91
+[; ;lab_3.c: 91:         UARTSendString(adc1, 6);
 }
 [e :U 144 ]
-"89
-[; ;lab_3.c: 89: 
+"92
+[; ;lab_3.c: 92:         UARTSendString("V", 3);
 [e = . . _PIR1bits 0 6 -> -> 0 `i `uc ]
-"90
-[; ;lab_3.c: 90:         Lcd_Set_Cursor(2, 15);
+"93
+[; ;lab_3.c: 93:         UARTSendString("|", 3);
 }
 [e :U 142 ]
-"91
-[; ;lab_3.c: 91:         Lcd_Write_String(string_uart);
+"94
+[; ;lab_3.c: 94:         UARTSendString(" ", 3);
 [e $ ! != -> ( _UARTDataReady ..  `i -> 0 `i 145  ]
 {
-"92
-[; ;lab_3.c: 92:         _delay((unsigned long)((20)*(4000000/4000.0)));
+"95
+[; ;lab_3.c: 95: 
 [e = _valor_uart ( _UARTReadChar ..  ]
-"93
-[; ;lab_3.c: 93: 
+"96
+[; ;lab_3.c: 96: 
 [e $ ! == -> _valor_uart `ui -> 43 `ui 146  ]
 {
-"94
-[; ;lab_3.c: 94:     }
+"97
+[; ;lab_3.c: 97:         convert(string_uart, cont_uart, 1);
 [e ++ _cont_uart -> -> 1 `i `f ]
-"95
-[; ;lab_3.c: 95: }
+"98
+[; ;lab_3.c: 98: 
 }
 [e $U 147  ]
 [e :U 146 ]
 [e $ ! == -> _valor_uart `ui -> 45 `ui 148  ]
 {
-"96
+"99
+[; ;lab_3.c: 99:         Lcd_Set_Cursor(2, 1);
 [e -- _cont_uart -> -> 1 `i `f ]
-"97
+"100
+[; ;lab_3.c: 100:         Lcd_Write_String(adc0);
 }
 [e :U 148 ]
 [e :U 147 ]
-"98
+"101
+[; ;lab_3.c: 101:         Lcd_Set_Cursor(2, 5);
 }
 [e :U 145 ]
-"100
-[e = _conv0 -> -> 0 `i `f ]
-"101
-[e = _conv1 -> -> 0 `i `f ]
 "103
-[e = _conv0 * / -> -> _var_adc0 `i `f -> -> 255 `i `f -> -> 5 `i `f ]
+[; ;lab_3.c: 103: 
+[e = _conv0 -> -> 0 `i `f ]
 "104
-[e ( _convert (3 , , &U _adc0 _conv0 -> 2 `i ]
+[; ;lab_3.c: 104:         Lcd_Set_Cursor(2, 7);
+[e = _conv1 -> -> 0 `i `f ]
 "106
-[e = _conv1 * / -> -> _var_adc1 `i `f -> -> 255 `i `f -> -> 5 `i `f ]
+[; ;lab_3.c: 106:         Lcd_Set_Cursor(2, 11);
+[e = _conv0 * / -> -> _var_adc0 `i `f -> -> 255 `i `f -> -> 5 `i `f ]
 "107
-[e ( _convert (3 , , &U _adc1 _conv1 -> 2 `i ]
+[; ;lab_3.c: 107:         Lcd_Write_String("V");
+[e ( _convert (3 , , &U _adc0 _conv0 -> 2 `i ]
+"108
+[; ;lab_3.c: 108: 
+[e ( _UARTSendString (2 , :s 4C -> -> 3 `i `uc ]
 "109
-[e ( _convert (3 , , &U _string_uart _cont_uart -> 1 `i ]
+[; ;lab_3.c: 109:         Lcd_Set_Cursor(2, 15);
+[e ( _UARTSendString (2 , :s 5C -> -> 6 `i `uc ]
+"110
+[; ;lab_3.c: 110:         Lcd_Write_String(string_uart);
+[e ( _UARTSendString (2 , :s 6C -> -> 3 `i `uc ]
 "111
-[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
+[; ;lab_3.c: 111:         _delay((unsigned long)((20)*(4000000/4000.0)));
+[e ( _UARTSendString (2 , :s 7C -> -> 3 `i `uc ]
 "112
-[e ( _Lcd_Write_String (1 &U _adc0 ]
+[; ;lab_3.c: 112: 
+[e ( _UARTSendString (2 , -> &U _adc0 `*Cuc -> -> 6 `i `uc ]
 "113
-[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 5 `i `uc ]
+[; ;lab_3.c: 113:     }
+[e ( _UARTSendString (2 , :s 8C -> -> 3 `i `uc ]
 "114
-[e ( _Lcd_Write_String (1 :s 4C ]
-"116
-[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 7 `i `uc ]
+[; ;lab_3.c: 114: }
+[e ( _UARTSendString (2 , :s 9C -> -> 3 `i `uc ]
+"115
+[e ( _UARTSendString (2 , :s 10C -> -> 3 `i `uc ]
 "117
-[e ( _Lcd_Write_String (1 &U _adc1 ]
+[e = _conv1 * / -> -> _var_adc1 `i `f -> -> 255 `i `f -> -> 5 `i `f ]
 "118
-[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 11 `i `uc ]
+[e ( _convert (3 , , &U _adc1 _conv1 -> 2 `i ]
 "119
-[e ( _Lcd_Write_String (1 :s 5C ]
+[e ( _UARTSendString (2 , :s 11C -> -> 6 `i `uc ]
+"120
+[e ( _UARTSendString (2 , :s 12C -> -> 3 `i `uc ]
 "121
-[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 15 `i `uc ]
+[e ( _UARTSendString (2 , :s 13C -> -> 3 `i `uc ]
 "122
-[e ( _Lcd_Write_String (1 &U _string_uart ]
+[e ( _UARTSendString (2 , -> &U _adc1 `*Cuc -> -> 6 `i `uc ]
 "123
-[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
+[e ( _UARTSendString (2 , :s 14C -> -> 3 `i `uc ]
+"124
+[e ( _UARTSendString (2 , :s 15C -> -> 3 `i `uc ]
 "125
+[e ( _UARTSendString (2 , :s 16C -> -> 3 `i `uc ]
+"128
+[e ( _convert (3 , , &U _string_uart _cont_uart -> 1 `i ]
+"130
+[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
+"131
+[e ( _Lcd_Write_String (1 &U _adc0 ]
+"132
+[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 5 `i `uc ]
+"133
+[e ( _Lcd_Write_String (1 :s 17C ]
+"135
+[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 7 `i `uc ]
+"136
+[e ( _Lcd_Write_String (1 &U _adc1 ]
+"137
+[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 11 `i `uc ]
+"138
+[e ( _Lcd_Write_String (1 :s 18C ]
+"140
+[e ( _Lcd_Set_Cursor (2 , -> -> 2 `i `uc -> -> 15 `i `uc ]
+"141
+[e ( _Lcd_Write_String (1 &U _string_uart ]
+"142
+[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 4000000 `l `d .4000.0 `ul ]
+"144
 }
 [e :U 139 ]
 [e $U 140  ]
 [e :U 141 ]
-"126
+"145
 [e :UE 138 ]
 }
-[a 4C 86 0 ]
-[a 5C 86 0 ]
+[a 4C 124 0 ]
+[a 15C 124 0 ]
+[a 8C 86 0 ]
+[a 14C 86 0 ]
+[a 17C 86 0 ]
+[a 18C 86 0 ]
 [a 3C 83 51 58 0 ]
 [a 2C 83 50 58 0 ]
 [a 1C 83 49 58 0 ]
+[a 6C 58 0 ]
+[a 12C 58 0 ]
+[a 11C 83 50 0 ]
+[a 5C 83 49 0 ]
+[a 9C 44 0 ]
+[a 7C 32 0 ]
+[a 10C 32 0 ]
+[a 13C 32 0 ]
+[a 16C 32 0 ]

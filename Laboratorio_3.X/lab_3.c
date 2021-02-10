@@ -37,10 +37,13 @@ char string_uart[10];
 char valor_uart = 0;
 char adc0[10];
 char adc1[10];
+int8_t fin_linea = 0x3;
 float conv0 = 0;
 float conv1 = 0;
 //******************************************************************************
 //**************************Prototipos de Funciones*****************************
+uint8_t IntToString(void);
+//******************************************************************************
 
 void main(void) {
     //--------------------------Canal Analogico---------------------------------
@@ -102,9 +105,25 @@ void main(void) {
 
         conv0 = (var_adc0 / (float) 255)*5;
         convert(adc0, conv0, 2);
+        UARTSendString("|", 3);
+        UARTSendString("S1", 6);
+        UARTSendString(":", 3);
+        UARTSendString(" ", 3);
+        UARTSendString(adc0, 6);
+        UARTSendString("V", 3);
+        UARTSendString(",", 3);
+        UARTSendString(" ", 3);
 
         conv1 = (var_adc1 / (float) 255)*5;
         convert(adc1, conv1, 2);
+        UARTSendString("S2", 6);
+        UARTSendString(":", 3);
+        UARTSendString(" ", 3);
+        UARTSendString(adc1, 6);
+        UARTSendString("V", 3);
+        UARTSendString("|", 3);
+        UARTSendString(" ", 3);
+    
 
         convert(string_uart, cont_uart, 1);
 
@@ -117,7 +136,7 @@ void main(void) {
         Lcd_Write_String(adc1);
         Lcd_Set_Cursor(2, 11);
         Lcd_Write_String("V");
-        
+
         Lcd_Set_Cursor(2, 15);
         Lcd_Write_String(string_uart);
         __delay_ms(20);

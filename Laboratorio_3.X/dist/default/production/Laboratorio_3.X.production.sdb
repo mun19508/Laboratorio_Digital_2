@@ -35,7 +35,7 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"45 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\lab_3.c
+"48 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\lab_3.c
 [v _main main `(v  1 e 1 0 ]
 "11 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\LCD.c
 [v _Lcd_Port Lcd_Port `(v  1 e 1 0 ]
@@ -57,6 +57,8 @@
 [v _UARTInit UARTInit `(v  1 e 1 0 ]
 "45
 [v _UARTSendChar UARTSendChar `(v  1 e 1 0 ]
+"55
+[v _UARTSendString UARTSendString `(v  1 e 1 0 ]
 "66
 [v _UARTDataReady UARTDataReady `(uc  1 e 1 0 ]
 "74
@@ -69,7 +71,7 @@
 [v _PORTC PORTC `VEuc  1 e 1 @7 ]
 "353
 [v _PORTD PORTD `VEuc  1 e 1 @8 ]
-[s S174 . 1 `uc 1 RD0 1 0 :1:0 
+[s S194 . 1 `uc 1 RD0 1 0 :1:0 
 `uc 1 RD1 1 0 :1:1 
 `uc 1 RD2 1 0 :1:2 
 `uc 1 RD3 1 0 :1:3 
@@ -79,8 +81,8 @@
 `uc 1 RD7 1 0 :1:7 
 ]
 "370
-[u S183 . 1 `S174 1 . 1 0 ]
-[v _PORTDbits PORTDbits `VES183  1 e 1 @8 ]
+[u S203 . 1 `S194 1 . 1 0 ]
+[v _PORTDbits PORTDbits `VES203  1 e 1 @8 ]
 "415
 [v _PORTE PORTE `VEuc  1 e 1 @9 ]
 [s S97 . 1 `uc 1 TMR1IF 1 0 :1:0 
@@ -94,7 +96,7 @@
 "554
 [u S105 . 1 `S97 1 . 1 0 ]
 [v _PIR1bits PIR1bits `VES105  1 e 1 @12 ]
-[s S451 . 1 `uc 1 RX9D 1 0 :1:0 
+[s S471 . 1 `uc 1 RX9D 1 0 :1:0 
 `uc 1 OERR 1 0 :1:1 
 `uc 1 FERR 1 0 :1:2 
 `uc 1 ADDEN 1 0 :1:3 
@@ -104,31 +106,31 @@
 `uc 1 SPEN 1 0 :1:7 
 ]
 "1069
-[s S460 . 1 `uc 1 RCD8 1 0 :1:0 
+[s S480 . 1 `uc 1 RCD8 1 0 :1:0 
 `uc 1 . 1 0 :5:1 
 `uc 1 RC9 1 0 :1:6 
 ]
-[s S464 . 1 `uc 1 . 1 0 :6:0 
+[s S484 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 nRC8 1 0 :1:6 
 ]
-[s S467 . 1 `uc 1 . 1 0 :6:0 
+[s S487 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 RC8_9 1 0 :1:6 
 ]
-[u S470 . 1 `S451 1 . 1 0 `S460 1 . 1 0 `S464 1 . 1 0 `S467 1 . 1 0 ]
-[v _RCSTAbits RCSTAbits `VES470  1 e 1 @24 ]
+[u S490 . 1 `S471 1 . 1 0 `S480 1 . 1 0 `S484 1 . 1 0 `S487 1 . 1 0 ]
+[v _RCSTAbits RCSTAbits `VES490  1 e 1 @24 ]
 "1134
 [v _TXREG TXREG `VEuc  1 e 1 @25 ]
 "1141
 [v _RCREG RCREG `VEuc  1 e 1 @26 ]
 "1239
 [v _ADRESH ADRESH `VEuc  1 e 1 @30 ]
-[s S235 . 1 `uc 1 ADON 1 0 :1:0 
+[s S255 . 1 `uc 1 ADON 1 0 :1:0 
 `uc 1 GO_nDONE 1 0 :1:1 
 `uc 1 CHS 1 0 :4:2 
 `uc 1 ADCS 1 0 :2:6 
 ]
 "1277
-[s S240 . 1 `uc 1 . 1 0 :1:0 
+[s S260 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 GO 1 0 :1:1 
 `uc 1 CHS0 1 0 :1:2 
 `uc 1 CHS1 1 0 :1:3 
@@ -137,14 +139,14 @@
 `uc 1 ADCS0 1 0 :1:6 
 `uc 1 ADCS1 1 0 :1:7 
 ]
-[s S249 . 1 `uc 1 . 1 0 :1:0 
+[s S269 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 nDONE 1 0 :1:1 
 ]
-[s S252 . 1 `uc 1 . 1 0 :1:0 
+[s S272 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 GO_DONE 1 0 :1:1 
 ]
-[u S255 . 1 `S235 1 . 1 0 `S240 1 . 1 0 `S249 1 . 1 0 `S252 1 . 1 0 ]
-[v _ADCON0bits ADCON0bits `VES255  1 e 1 @31 ]
+[u S275 . 1 `S255 1 . 1 0 `S260 1 . 1 0 `S269 1 . 1 0 `S272 1 . 1 0 ]
+[v _ADCON0bits ADCON0bits `VES275  1 e 1 @31 ]
 "1417
 [v _TRISA TRISA `VEuc  1 e 1 @133 ]
 "1479
@@ -165,7 +167,7 @@
 [v _TRISD TRISD `VEuc  1 e 1 @136 ]
 "1665
 [v _TRISE TRISE `VEuc  1 e 1 @137 ]
-[s S281 . 1 `uc 1 TMR1IE 1 0 :1:0 
+[s S301 . 1 `uc 1 TMR1IE 1 0 :1:0 
 `uc 1 TMR2IE 1 0 :1:1 
 `uc 1 CCP1IE 1 0 :1:2 
 `uc 1 SSPIE 1 0 :1:3 
@@ -174,9 +176,9 @@
 `uc 1 ADIE 1 0 :1:6 
 ]
 "1719
-[u S289 . 1 `S281 1 . 1 0 ]
-[v _PIE1bits PIE1bits `VES289  1 e 1 @140 ]
-[s S414 . 1 `uc 1 TX9D 1 0 :1:0 
+[u S309 . 1 `S301 1 . 1 0 ]
+[v _PIE1bits PIE1bits `VES309  1 e 1 @140 ]
+[s S434 . 1 `uc 1 TX9D 1 0 :1:0 
 `uc 1 TRMT 1 0 :1:1 
 `uc 1 BRGH 1 0 :1:2 
 `uc 1 SENDB 1 0 :1:3 
@@ -186,29 +188,29 @@
 `uc 1 CSRC 1 0 :1:7 
 ]
 "2583
-[s S423 . 1 `uc 1 TXD8 1 0 :1:0 
+[s S443 . 1 `uc 1 TXD8 1 0 :1:0 
 `uc 1 . 1 0 :5:1 
 `uc 1 nTX8 1 0 :1:6 
 ]
-[s S427 . 1 `uc 1 . 1 0 :6:0 
+[s S447 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 TX8_9 1 0 :1:6 
 ]
-[u S430 . 1 `S414 1 . 1 0 `S423 1 . 1 0 `S427 1 . 1 0 ]
-[v _TXSTAbits TXSTAbits `VES430  1 e 1 @152 ]
+[u S450 . 1 `S434 1 . 1 0 `S443 1 . 1 0 `S447 1 . 1 0 ]
+[v _TXSTAbits TXSTAbits `VES450  1 e 1 @152 ]
 "2643
 [v _SPBRG SPBRG `VEuc  1 e 1 @153 ]
-[s S311 . 1 `uc 1 . 1 0 :4:0 
+[s S331 . 1 `uc 1 . 1 0 :4:0 
 `uc 1 VCFG0 1 0 :1:4 
 `uc 1 VCFG1 1 0 :1:5 
 `uc 1 . 1 0 :1:6 
 `uc 1 ADFM 1 0 :1:7 
 ]
 "2992
-[u S317 . 1 `S311 1 . 1 0 ]
-[v _ADCON1bits ADCON1bits `VES317  1 e 1 @159 ]
+[u S337 . 1 `S331 1 . 1 0 ]
+[v _ADCON1bits ADCON1bits `VES337  1 e 1 @159 ]
 "3388
 [v _ANSEL ANSEL `VEuc  1 e 1 @392 ]
-[s S326 . 1 `uc 1 ANS0 1 0 :1:0 
+[s S346 . 1 `uc 1 ANS0 1 0 :1:0 
 `uc 1 ANS1 1 0 :1:1 
 `uc 1 ANS2 1 0 :1:2 
 `uc 1 ANS3 1 0 :1:3 
@@ -218,11 +220,11 @@
 `uc 1 ANS7 1 0 :1:7 
 ]
 "3405
-[u S335 . 1 `S326 1 . 1 0 ]
-[v _ANSELbits ANSELbits `VES335  1 e 1 @392 ]
+[u S355 . 1 `S346 1 . 1 0 ]
+[v _ANSELbits ANSELbits `VES355  1 e 1 @392 ]
 "3450
 [v _ANSELH ANSELH `VEuc  1 e 1 @393 ]
-[s S347 . 1 `uc 1 ANS8 1 0 :1:0 
+[s S367 . 1 `uc 1 ANS8 1 0 :1:0 
 `uc 1 ANS9 1 0 :1:1 
 `uc 1 ANS10 1 0 :1:2 
 `uc 1 ANS11 1 0 :1:3 
@@ -230,8 +232,8 @@
 `uc 1 ANS13 1 0 :1:5 
 ]
 "3465
-[u S354 . 1 `S347 1 . 1 0 ]
-[v _ANSELHbits ANSELHbits `VES354  1 e 1 @393 ]
+[u S374 . 1 `S367 1 . 1 0 ]
+[v _ANSELHbits ANSELHbits `VES374  1 e 1 @393 ]
 "32 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\lab_3.c
 [v _canal_act canal_act `uc  1 e 1 0 ]
 "33
@@ -248,14 +250,14 @@
 [v _adc0 adc0 `[10]uc  1 e 10 0 ]
 "39
 [v _adc1 adc1 `[10]uc  1 e 10 0 ]
-"40
-[v _conv0 conv0 `f  1 e 4 0 ]
 "41
+[v _conv0 conv0 `f  1 e 4 0 ]
+"42
 [v _conv1 conv1 `f  1 e 4 0 ]
-"45
+"48
 [v _main main `(v  1 e 1 0 ]
 {
-"126
+"145
 } 0
 "60 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\ADC_LIB.c
 [v _start_ch start_ch `(v  1 e 1 0 ]
@@ -361,17 +363,17 @@
 "8 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c90\common\sprcmul.c
 [v ___flmul __flmul `(d  1 e 4 0 ]
 {
-[s S847 . 4 `uc 1 a 1 0 `uc 1 b 1 1 `uc 1 c 1 2 `uc 1 d 1 3 ]
+[s S867 . 4 `uc 1 a 1 0 `uc 1 b 1 1 `uc 1 c 1 2 `uc 1 d 1 3 ]
 "13
-[s S852 . 4 `i 1 wordA 2 0 `i 1 wordB 2 2 ]
-[u S855 . 4 `l 1 i 4 0 `d 1 f 4 0 `S847 1 fAsBytes 4 0 `S852 1 fAsWords 4 0 ]
-[v ___flmul@prod prod `S855  1 a 4 64 ]
+[s S872 . 4 `i 1 wordA 2 0 `i 1 wordB 2 2 ]
+[u S875 . 4 `l 1 i 4 0 `d 1 f 4 0 `S867 1 fAsBytes 4 0 `S872 1 fAsWords 4 0 ]
+[v ___flmul@prod prod `S875  1 a 4 64 ]
 "12
 [v ___flmul@grs grs `ul  1 a 4 58 ]
-[s S924 . 2 `uc 1 a 1 0 `uc 1 b 1 1 ]
+[s S944 . 2 `uc 1 a 1 0 `uc 1 b 1 1 ]
 "14
-[u S927 . 2 `i 1 i 2 0 `ui 1 n 2 0 `S924 1 nAsBytes 2 0 ]
-[v ___flmul@temp temp `S927  1 a 2 68 ]
+[u S947 . 2 `i 1 i 2 0 `ui 1 n 2 0 `S944 1 nAsBytes 2 0 ]
+[v ___flmul@temp temp `S947  1 a 2 68 ]
 "10
 [v ___flmul@bexp bexp `uc  1 a 1 63 ]
 "11
@@ -437,7 +439,25 @@
 [v ___awdiv@dividend dividend `i  1 p 2 2 ]
 "41
 } 0
-"74 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\UART.c
+"55 C:\Users\Daniel\Documents\GitHub\Laboratorios_Digital_2\Laboratorio_3.X\UART.c
+[v _UARTSendString UARTSendString `(v  1 e 1 0 ]
+{
+"56
+[v UARTSendString@i i `i  1 a 2 7 ]
+"55
+[v UARTSendString@str str `*.26DCuc  1 p 2 1 ]
+[v UARTSendString@max_length max_length `DCuc  1 p 1 3 ]
+"60
+} 0
+"45
+[v _UARTSendChar UARTSendChar `(v  1 e 1 0 ]
+{
+[v UARTSendChar@c c `DCuc  1 a 1 wreg ]
+[v UARTSendChar@c c `DCuc  1 a 1 wreg ]
+[v UARTSendChar@c c `DCuc  1 a 1 0 ]
+"48
+} 0
+"74
 [v _UARTReadChar UARTReadChar `(uc  1 e 1 0 ]
 {
 "77

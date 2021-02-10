@@ -5,7 +5,6 @@
  * Created on 8 de febrero de 2021, 03:13 PM
  */
 #include "UART.h"
-
 /**
  * Initialize the UART module with given baud rate and speed mode
  * @param baud_rate

@@ -37,14 +37,9 @@ char string_uart[10];
 char valor_uart = 0;
 char adc0[10];
 char adc1[10];
-int8_t fin_linea = 0x3;
 float conv0 = 0;
 float conv1 = 0;
 //******************************************************************************
-//**************************Prototipos de Funciones*****************************
-uint8_t IntToString(void);
-//******************************************************************************
-
 void main(void) {
     //--------------------------Canal Analogico---------------------------------
     ANSEL = 0;
@@ -91,20 +86,22 @@ void main(void) {
             }
             PIR1bits.ADIF = 0;
         }
-        if (UARTDataReady()) {
+        if (UARTDataReady()) { //se comprueba si el valor ingresado hace que el contador
             valor_uart = UARTReadChar();
-            if (valor_uart == '+') {
-                cont_uart++;
-            } else if (valor_uart == '-') {
+            if (valor_uart == '+') { //aumente si es el caracter "+"
+                cont_uart++; 
+            } else if (valor_uart == '-') {//disminuya si es el caracter "-"
                 cont_uart--;
             }
         }
 
-        conv0 = 0;
-        conv1 = 0;
-
-        conv0 = (var_adc0 / (float) 255)*5;
-        convert(adc0, conv0, 2);
+        conv0 = 0;//se reinicia las cada ves que se inicia el proceso de enviar datos
+        conv1 = 0;//tanto para la LCD como por UART.
+//------------------------Mostrar datos via UART--------------------------------
+        //-----------------------------Sensor 1---------------------------------
+        conv0 = (var_adc0 / (float) 255)*5; //Se consigue el porcentaje con respecto al valor 
+       //maximo que un puerto puede tener, despues se multiplica por 5 para conocer el voltaje actual del puerto                                          
+        convert(adc0, conv0, 2);//se convierte el valor actual a un valor ASCII.
         UARTSendString("|", 3);
         UARTSendString("S1", 6);
         UARTSendString(":", 3);
@@ -113,8 +110,8 @@ void main(void) {
         UARTSendString("V", 3);
         UARTSendString(",", 3);
         UARTSendString(" ", 3);
-
-        conv1 = (var_adc1 / (float) 255)*5;
+        //-----------------------------Sensor 2---------------------------------
+        conv1 = (var_adc1 / (float) 255)*5; //misma logica que conv0
         convert(adc1, conv1, 2);
         UARTSendString("S2", 6);
         UARTSendString(":", 3);
@@ -123,10 +120,9 @@ void main(void) {
         UARTSendString("V", 3);
         UARTSendString("|", 3);
         UARTSendString(" ", 3);
-    
-
+        //---------------------Sensor 3(contador)-------------------------------
         convert(string_uart, cont_uart, 1);
-
+//-----------------------Mostrar datos en la LCD--------------------------------
         Lcd_Set_Cursor(2, 1);
         Lcd_Write_String(adc0);
         Lcd_Set_Cursor(2, 5);

@@ -1,7 +1,6 @@
 /*
  * File:   LCD.c
  * Author: electroSome & Embedded life
- *
  * Created on 4 de febrero de 2021, 04:27 PM
  */
 #define _XTAL_FREQ 4000000

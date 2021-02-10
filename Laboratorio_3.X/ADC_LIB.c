@@ -4,7 +4,6 @@
  *Descripcion: Se definen la operaciones a realizar por las funciones previamente
  *             definidas en el archivo ADC_LIB.h
  */
-
 #include "ADC_LIB.h"
 #define _XTAL_FREQ 4000000
 

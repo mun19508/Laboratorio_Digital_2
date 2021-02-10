@@ -5,7 +5,6 @@
  * //https://electrosome.com/lcd-pic-mplab-xc8/
  * //https://embeddedlifehelp.blogspot.com/2015/03/c-code-to-convert-floating-point-value.html
  */
-
 // This is a guard condition so that contents of this file are not included
 // more than once.  
 #ifndef LCD_H
@@ -13,7 +12,7 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
-
+//Se definen los puertos de la LCD
 #define RS PORTDbits.RD0
 #define EN PORTDbits.RD1
 #define RW PORTDbits.RD2

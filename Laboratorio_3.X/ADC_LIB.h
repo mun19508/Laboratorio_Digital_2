@@ -3,7 +3,6 @@
  * Author: Daniel Mundo
  *Descripcion: Se definen los prototipos de funciones a emplear por la libreria.
  */
-
 #ifndef ADC_LIB_H
 #define	ADC_LIB_H
 

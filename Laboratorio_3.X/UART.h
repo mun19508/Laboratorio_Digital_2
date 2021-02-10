@@ -8,7 +8,6 @@
  * Change the values below for the clock frequency and the UART pins used.
  * 
  */
-
 #ifndef UART_H
 #define	UART_H
 

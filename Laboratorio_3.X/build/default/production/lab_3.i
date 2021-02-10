@@ -14,7 +14,6 @@
 
 
 
-
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -2637,9 +2636,137 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
+# 8 "lab_3.c" 2
+
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
 # 9 "lab_3.c" 2
 
+# 1 "./LCD.h" 1
+# 15 "./LCD.h"
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
+# 15 "./LCD.h" 2
+# 29 "./LCD.h"
+void Lcd_Port(char a);
+void Lcd_Cmd(char a);
+void Lcd_Clear(void);
+void Lcd_Set_Cursor(char a, char b);
+void Lcd_Init(void);
+void Lcd_Write_Char(char a);
+void Lcd_Write_String(char *a);
+void Lcd_Shift_Right(void);
+void Lcd_Shift_Left(void);
+
+void convert(char *data,float a, int place);
+# 10 "lab_3.c" 2
+
+# 1 "./ADC_LIB.h" 1
+# 11 "./ADC_LIB.h"
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
+# 11 "./ADC_LIB.h" 2
+
+void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
+void Select_ch(uint8_t channel);
+void start_ch(uint8_t channel);
+# 11 "lab_3.c" 2
+
+
+
+
+
+#pragma config FOSC = INTRC_NOCLKOUT
+#pragma config WDTE = OFF
+#pragma config PWRTE = OFF
+#pragma config MCLRE = OFF
+#pragma config CP = OFF
+#pragma config CPD = OFF
+#pragma config BOREN = OFF
+#pragma config IESO = OFF
+#pragma config FCMEN = OFF
+#pragma config LVP = OFF
+
+#pragma config BOR4V = BOR40V
+#pragma config WRT = OFF
+
+
+uint8_t canal_act = 0;
+volatile uint8_t var_adc0 = 0;
+volatile uint8_t var_adc1 = 0;
+char adc0[10];
+char adc1[10];
+float conv0 = 0;
+float conv1 = 0;
+
+
+
+
+
+void __attribute__((picinterrupt(("")))) ISR(void) {
+
+}
 
 void main(void) {
-    return;
+
+    INTCONbits.GIE = 1;
+    INTCONbits.PEIE = 1;
+    INTCONbits.RBIF = 0;
+
+    ANSEL = 0;
+    ANSELH = 0;
+    start_adc(2, 0, 0, 0);
+    start_ch(12);
+    start_ch(10);
+    Select_ch(12);
+
+    TRISA = 0;
+    TRISC = 0;
+    TRISD = 0;
+    TRISE = 0;
+    TRISB = 255;
+
+    PORTA = 0;
+    PORTB = 0;
+    PORTC = 0;
+    PORTD = 0;
+    PORTE = 0;
+
+    Lcd_Init();
+    Lcd_Clear();
+
+
+    while (1) {
+        Lcd_Set_Cursor(1, 1);
+        Lcd_Write_String("P1");
+        Lcd_Set_Cursor(1, 8);
+        Lcd_Write_String("P2");
+        Lcd_Set_Cursor(1, 15);
+        Lcd_Write_String("PC");
+        if (PIR1bits.ADIF == 1) {
+            if (canal_act == 0) {
+                var_adc0 = ADRESH;
+                Select_ch(10);
+                canal_act++;
+            } else {
+                var_adc1 = ADRESH;
+                Select_ch(12);
+                canal_act--;
+            }
+            PIR1bits.ADIF = 0;
+        }
+        conv0 = 0;
+        conv1 = 0;
+
+        conv0 = (var_adc0 / (float) 255)*5;
+        convert(adc0, conv0, 2);
+
+        conv1 = (var_adc1 / (float) 255)*5;
+        convert(adc1, conv1, 2);
+
+        Lcd_Set_Cursor(2, 1);
+        Lcd_Write_String(adc0);
+
+        Lcd_Set_Cursor(2, 8);
+        Lcd_Write_String(adc1);
+        _delay((unsigned long)((20)*(4000000/4000.0)));
+
+    }
 }

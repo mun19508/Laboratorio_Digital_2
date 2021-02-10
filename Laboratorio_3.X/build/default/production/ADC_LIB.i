@@ -1,4 +1,4 @@
-# 1 "LCD.c"
+# 1 "ADC_LIB.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,7 +6,7 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "LCD.c" 2
+# 1 "ADC_LIB.c" 2
 
 
 
@@ -14,6 +14,8 @@
 
 
 
+# 1 "./ADC_LIB.h" 1
+# 10 "./ADC_LIB.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -2636,147 +2638,213 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 8 "LCD.c" 2
+# 10 "./ADC_LIB.h" 2
 
-# 1 "./LCD.h" 1
-# 15 "./LCD.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 15 "./LCD.h" 2
-# 29 "./LCD.h"
-void Lcd_Port(char a);
-void Lcd_Cmd(char a);
-void Lcd_Clear(void);
-void Lcd_Set_Cursor(char a, char b);
-void Lcd_Init(void);
-void Lcd_Write_Char(char a);
-void Lcd_Write_String(char *a);
-void Lcd_Shift_Right(void);
-void Lcd_Shift_Left(void);
+# 11 "./ADC_LIB.h" 2
 
-void convert(char *data,float a, int place);
-# 9 "LCD.c" 2
+void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
+void Select_ch(uint8_t channel);
+void start_ch(uint8_t channel);
+# 8 "ADC_LIB.c" 2
 
 
-void Lcd_Port(char a) {
-    PORTA = a;
-}
 
-void Lcd_Cmd(char a) {
-    PORTDbits.RD0 = 0;
-    Lcd_Port(a);
-    PORTDbits.RD1 = 1;
-    _delay((unsigned long)((4)*(4000000/4000.0)));
-    PORTDbits.RD1 = 0;
-}
-
-void Lcd_Clear() {
-    Lcd_Cmd(0);
-    Lcd_Cmd(1);
-}
-
-void Lcd_Set_Cursor(char a, char b) {
-    char temp;
-    if (a == 1) {
-        temp = 0x80 + b - 1;
-        Lcd_Cmd(temp);
-    } else if (a == 2) {
-        temp = 0xC0 + b - 1;
-        Lcd_Cmd(temp);
+void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL) {
+    ADCON0bits.ADON = 1;
+    switch (frec) {
+        case 1:
+            ADCON0bits.ADCS0 = 0;
+            ADCON0bits.ADCS1 = 0;
+            break;
+        case 2:
+            ADCON0bits.ADCS0 = 1;
+            ADCON0bits.ADCS1 = 0;
+            break;
+        case 3:
+            ADCON0bits.ADCS0 = 0;
+            ADCON0bits.ADCS1 = 1;
+            break;
+        case 4:
+            ADCON0bits.ADCS0 = 1;
+            ADCON0bits.ADCS1 = 1;
+            break;
+    }
+    if (isr == 1) {
+        PIE1bits.ADIE = 1;
+        PIR1bits.ADIF = 0;
+    }
+    if (justRL == 0) {
+        ADCON1bits.ADFM = 0;
+    } else {
+        ADCON1bits.ADFM = 1;
+    }
+    switch (Vref) {
+        case 0:
+            ADCON1bits.VCFG0 = 0;
+            ADCON1bits.VCFG1 = 0;
+            break;
+        case 1:
+            ADCON1bits.VCFG0 = 1;
+            ADCON1bits.VCFG1 = 0;
+            break;
+        case 2:
+            ADCON1bits.VCFG0 = 0;
+            ADCON1bits.VCFG1 = 1;
+            break;
+        case 3:
+            ADCON1bits.VCFG0 = 1;
+            ADCON1bits.VCFG1 = 1;
+            break;
     }
 }
 
-void Lcd_Init() {
-    Lcd_Port(0x00);
-    _delay((unsigned long)((20)*(4000000/4000.0)));
-    Lcd_Cmd(0x30);
-    _delay((unsigned long)((5)*(4000000/4000.0)));
-    Lcd_Cmd(0x30);
-    _delay((unsigned long)((11)*(4000000/4000.0)));
-    Lcd_Cmd(0x30);
-
-    Lcd_Cmd(0x38);
-    Lcd_Cmd(0x0C);
-    Lcd_Cmd(0x6);
+void start_ch(uint8_t channel) {
+    switch (channel) {
+        case 0:
+            ANSELbits.ANS0 = 1;
+            break;
+        case 1:
+            ANSELbits.ANS1 = 1;
+            break;
+        case 2:
+            ANSELbits.ANS2 = 1;
+            break;
+        case 3:
+            ANSELbits.ANS3 = 1;
+            break;
+        case 4:
+            ANSELbits.ANS4 = 1;
+            break;
+        case 5:
+            ANSELbits.ANS5 = 1;
+            break;
+        case 6:
+            ANSELbits.ANS6 = 1;
+            break;
+        case 7:
+            ANSELbits.ANS7 = 1;
+            break;
+        case 8:
+            ANSELHbits.ANS8 = 1;
+            break;
+        case 9:
+            ANSELHbits.ANS9 = 1;
+            break;
+        case 10:
+            ANSELHbits.ANS10 = 1;
+            break;
+        case 11:
+            ANSELHbits.ANS11 = 1;
+            break;
+        case 12:
+            ANSELHbits.ANS12 = 1;
+            break;
+        case 13:
+            ANSELHbits.ANS13 = 1;
+            break;
+    }
 }
 
-void Lcd_Write_Char(char a) {
-    PORTDbits.RD0 = 1;
-    Lcd_Port(a);
-    PORTDbits.RD1 = 1;
-    _delay((unsigned long)((10)*(4000000/4000000.0)));
-    PORTDbits.RD1 = 0;
-}
-
-void Lcd_Write_String(char *a) {
-    int i;
-    for (i = 0; a[i] != '\0'; i++)
-        Lcd_Write_Char(a[i]);
-}
-
-void Lcd_Shift_Right() {
-    Lcd_Cmd(0x01);
-    Lcd_Cmd(0x0C);
-}
-
-void Lcd_Shift_Left() {
-    Lcd_Cmd(0x01);
-    Lcd_Cmd(0x08);
-}
-
-void convert(char *data,float a, int place)
-{
-     int temp=a;
-     float x=0.0;
-     int digits=0;
-     int i=0,mu=1;
-     int j=0;
-     if(a<0)
-     {
-            a=a*-1;
-            data[i]='-';
-            i++;
-      }
-
-     while(temp!=0)
-     {
-         temp=temp/10;
-         digits++;
-     }
-     while(digits!=0)
-     {
-         if(digits==1)mu=1;
-         else for(j=2;j<=digits;j++)mu=mu*10;
-
-         x=a/mu;
-         a=a-((int)x*mu);
-         data[i]=0x30+((int)x);
-         i++;
-         digits--;
-         mu=1;
-     }
-
-     data[i]='.';
-     i++;
-     digits=0;
-     for(j=1;j<=place;j++)mu=mu*10;
-     x=(a-(int)a)*mu;
-     a=x;
-     temp=a;
-     x=0.0;
-     mu=1;
-     digits=place;
-     while(digits!=0)
-     {
-         if(digits==1)mu=1;
-         else for(j=2;j<=digits;j++)mu=mu*10;
-
-         x=a/mu;
-         a=a-((int)x*mu);
-         data[i]=0x30+((int)x);
-         i++;
-         digits--;
-         mu=1;
-     }
-
-    data[i]='\n';
+void Select_ch(uint8_t channel) {
+    switch (channel) {
+        case 0:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 1:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 2:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 3:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 4:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 5:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 6:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 7:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 0;
+            break;
+        case 8:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 9:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 10:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 11:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 0;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 12:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 13:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 0;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 14:
+            ADCON0bits.CHS0 = 0;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 1;
+            break;
+        case 15:
+            ADCON0bits.CHS0 = 1;
+            ADCON0bits.CHS1 = 1;
+            ADCON0bits.CHS2 = 1;
+            ADCON0bits.CHS3 = 1;
+            break;
+    }
+    _delay((unsigned long)((5)*(4000000/4000000.0)));
+    ADCON0bits.GO = 1;
 }

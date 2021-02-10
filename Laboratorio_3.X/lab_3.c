@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include "LCD.h"
 #include "ADC_LIB.h"
+#include "UART.h"
 #define _XTAL_FREQ 4000000
 //******************************************************************************
 //***************************Bits de ConFig*************************************
@@ -31,6 +32,9 @@
 uint8_t canal_act = 0;
 volatile uint8_t var_adc0 = 0;
 volatile uint8_t var_adc1 = 0;
+float cont_uart = 0;
+char string_uart[10];
+char valor_uart = 0;
 char adc0[10];
 char adc1[10];
 float conv0 = 0;
@@ -38,17 +42,7 @@ float conv1 = 0;
 //******************************************************************************
 //**************************Prototipos de Funciones*****************************
 
-//*****************************************************************************
-
-void __interrupt() ISR(void) {
-
-}
-
 void main(void) {
-    //-----------------------Interrupciones---------------------------------
-    INTCONbits.GIE = 1; //Se habilitan ISR globales.
-    INTCONbits.PEIE = 1; //Se habilitan ISR perifericas.
-    INTCONbits.RBIF = 0;
     //--------------------------Canal Analogico---------------------------------
     ANSEL = 0;
     ANSELH = 0; //Puerto A y B como digitales
@@ -56,9 +50,12 @@ void main(void) {
     start_ch(12); //Habilita el pin del Puerto RB0.
     start_ch(10); //Habilita el pin del Puerto RB1.
     Select_ch(12); //Selecciona el canal e inicia la conversion.
+    //--------------------------Comunicacion UART-------------------------------
+    UARTInit(9600, 1);
     //--------------------------Puerto Entrada/salida---------------------------
     TRISA = 0;
-    TRISC = 0;
+    TRISCbits.TRISC6 = 0;
+    TRISCbits.TRISC7 = 1;
     TRISD = 0;
     TRISE = 0; //Puerto A, C, D & E como salidas 
     TRISB = 255;
@@ -71,15 +68,14 @@ void main(void) {
     //-------------------------------LCD----------------------------------------
     Lcd_Init(); //se inicia la configuración de la LCD
     Lcd_Clear();
-
     //--------------------------Loop principal----------------------------------
     while (1) {
         Lcd_Set_Cursor(1, 1);
-        Lcd_Write_String("P1");
+        Lcd_Write_String("S1:");
         Lcd_Set_Cursor(1, 8);
-        Lcd_Write_String("P2");
+        Lcd_Write_String("S2:");
         Lcd_Set_Cursor(1, 15);
-        Lcd_Write_String("PC");
+        Lcd_Write_String("S3:");
         if (PIR1bits.ADIF == 1) {
             if (canal_act == 0) {
                 var_adc0 = ADRESH; //se guarda el valor convertido en la variable
@@ -92,6 +88,15 @@ void main(void) {
             }
             PIR1bits.ADIF = 0;
         }
+        if (UARTDataReady()) {
+            valor_uart = UARTReadChar();
+            if (valor_uart == '+') {
+                cont_uart++;
+            } else if (valor_uart == '-') {
+                cont_uart--;
+            }
+        }
+
         conv0 = 0;
         conv1 = 0;
 
@@ -101,13 +106,22 @@ void main(void) {
         conv1 = (var_adc1 / (float) 255)*5;
         convert(adc1, conv1, 2);
 
+        convert(string_uart, cont_uart, 1);
+
         Lcd_Set_Cursor(2, 1);
         Lcd_Write_String(adc0);
+        Lcd_Set_Cursor(2, 5);
+        Lcd_Write_String("V");
 
-        Lcd_Set_Cursor(2, 8);
+        Lcd_Set_Cursor(2, 7);
         Lcd_Write_String(adc1);
+        Lcd_Set_Cursor(2, 11);
+        Lcd_Write_String("V");
+        
+        Lcd_Set_Cursor(2, 15);
+        Lcd_Write_String(string_uart);
         __delay_ms(20);
- 
+
     }
 }
 

@@ -1,4 +1,4 @@
-# 1 "ADC_LIB.c"
+# 1 "UART.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,16 +6,15 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "ADC_LIB.c" 2
+# 1 "UART.c" 2
 
 
 
 
 
 
-
-# 1 "./ADC_LIB.h" 1
-# 10 "./ADC_LIB.h"
+# 1 "./UART.h" 1
+# 15 "./UART.h"
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -2638,211 +2637,131 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 28 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\xc.h" 2 3
-# 10 "./ADC_LIB.h" 2
+# 15 "./UART.h" 2
 
 # 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
-# 11 "./ADC_LIB.h" 2
-
-void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL);
-void Select_ch(uint8_t channel);
-void start_ch(uint8_t channel);
-# 8 "ADC_LIB.c" 2
+# 16 "./UART.h" 2
+# 31 "./UART.h"
+void UARTInit(const uint32_t baud_rate, const uint8_t BRGH);
 
 
 
-void start_adc(uint8_t frec, uint8_t isr, uint8_t Vref, uint8_t justRL) {
-    ADCON0bits.ADON = 1;
-    switch (frec) {
-        case 1:
-            ADCON0bits.ADCS0 = 0;
-            ADCON0bits.ADCS1 = 0;
-            break;
-        case 2:
-            ADCON0bits.ADCS0 = 1;
-            ADCON0bits.ADCS1 = 0;
-            break;
-        case 3:
-            ADCON0bits.ADCS0 = 0;
-            ADCON0bits.ADCS1 = 1;
-            break;
-        case 4:
-            ADCON0bits.ADCS0 = 1;
-            ADCON0bits.ADCS1 = 1;
-            break;
-    }
-    if (isr == 1) {
-        PIE1bits.ADIE = 1;
-        PIR1bits.ADIF = 0;
-    }
-    if (justRL == 0) {
-        ADCON1bits.ADFM = 0;
+
+
+void UARTSendChar(const char c);
+
+
+
+
+
+
+void UARTSendString(const char* str, const uint8_t max_length);
+
+
+
+
+
+uint8_t UARTDataReady();
+
+
+
+
+
+char UARTReadChar();
+
+
+
+
+
+
+
+uint8_t UARTReadString(char *buf, uint8_t max_length);
+# 7 "UART.c" 2
+
+
+
+
+
+
+
+void UARTInit(const uint32_t baud_rate, const uint8_t BRGH) {
+
+    if (BRGH == 0) {
+        SPBRG = 4000000 / (64 * baud_rate) - 1;
+        TXSTAbits.BRGH = 0;
     } else {
-        ADCON1bits.ADFM = 1;
+        SPBRG = 4000000 / (16 * baud_rate) - 1;
+        TXSTAbits.BRGH = 1;
     }
-    switch (Vref) {
-        case 0:
-            ADCON1bits.VCFG0 = 0;
-            ADCON1bits.VCFG1 = 0;
-            break;
-        case 1:
-            ADCON1bits.VCFG0 = 1;
-            ADCON1bits.VCFG1 = 0;
-            break;
-        case 2:
-            ADCON1bits.VCFG0 = 0;
-            ADCON1bits.VCFG1 = 1;
-            break;
-        case 3:
-            ADCON1bits.VCFG0 = 1;
-            ADCON1bits.VCFG1 = 1;
-            break;
+
+
+    TXSTAbits.TX9 = 0;
+    TXSTAbits.TXEN = 1;
+    TXSTAbits.SYNC = 0;
+
+
+    RCSTAbits.SPEN = 1;
+    RCSTAbits.RX9 = 0;
+    RCSTAbits.CREN = 1;
+    RCSTAbits.FERR = 0;
+    RCSTAbits.OERR = 0;
+
+
+    TRISCbits.TRISC7 = 1;
+    TRISCbits.TRISC6 = 0;
+}
+
+
+
+
+
+void UARTSendChar(const char c) {
+    while (TXSTAbits.TRMT == 0);
+    TXREG = c;
+}
+
+
+
+
+
+
+void UARTSendString(const char* str, const uint8_t max_length) {
+    int i = 0;
+    for (i = 0; i < max_length && str[i] != '\0'; i++) {
+        UARTSendChar(str[i]);
     }
 }
-void start_ch(uint8_t channel) {
-    switch (channel) {
-        case 0:
-            ANSELbits.ANS0 = 1;
-            break;
-        case 1:
-            ANSELbits.ANS1 = 1;
-            break;
-        case 2:
-            ANSELbits.ANS2 = 1;
-            break;
-        case 3:
-            ANSELbits.ANS3 = 1;
-            break;
-        case 4:
-            ANSELbits.ANS4 = 1;
-            break;
-        case 5:
-            ANSELbits.ANS5 = 1;
-            break;
-        case 6:
-            ANSELbits.ANS6 = 1;
-            break;
-        case 7:
-            ANSELbits.ANS7 = 1;
-            break;
-        case 8:
-            ANSELHbits.ANS8 = 1;
-            break;
-        case 9:
-            ANSELHbits.ANS9 = 1;
-            break;
-        case 10:
-            ANSELHbits.ANS10 = 1;
-            break;
-        case 11:
-            ANSELHbits.ANS11 = 1;
-            break;
-        case 12:
-            ANSELHbits.ANS12 = 1;
-            break;
-        case 13:
-            ANSELHbits.ANS13 = 1;
-            break;
-    }
+
+
+
+
+
+uint8_t UARTDataReady() {
+    return PIR1bits.RCIF;
 }
-void Select_ch(uint8_t channel) {
-    switch (channel) {
-        case 0:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
+
+
+
+
+
+char UARTReadChar() {
+    while (!UARTDataReady());
+    return RCREG;
+}
+# 86 "UART.c"
+uint8_t UARTReadString(char *buf, uint8_t max_length) {
+    uint8_t i = 0;
+    char tmp = 1;
+    for (i = 0; i < max_length - 1; i++) {
+        tmp = UARTReadChar();
+
+        if (tmp == '\0' || tmp == '\n' || tmp == '\r') {
             break;
-        case 1:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 2:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 3:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 4:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 5:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 6:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 7:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 0;
-            break;
-        case 8:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 9:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 10:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 11:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 0;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 12:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 13:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 0;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 14:
-            ADCON0bits.CHS0 = 0;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
-            break;
-        case 15:
-            ADCON0bits.CHS0 = 1;
-            ADCON0bits.CHS1 = 1;
-            ADCON0bits.CHS2 = 1;
-            ADCON0bits.CHS3 = 1;
-            break;
+        }
+        buf[i] = tmp;
     }
-    _delay((unsigned long)((4)*(4000000/4000000.0)));
-    ADCON0bits.GO = 1;
+
+    buf[i + 1] = '\0';
+
+    return i;
 }

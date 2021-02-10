@@ -2669,6 +2669,47 @@ void Select_ch(uint8_t channel);
 void start_ch(uint8_t channel);
 # 11 "lab_3.c" 2
 
+# 1 "./UART.h" 1
+# 16 "./UART.h"
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.31\\pic\\include\\c90\\stdint.h" 1 3
+# 16 "./UART.h" 2
+# 31 "./UART.h"
+void UARTInit(const uint32_t baud_rate, const uint8_t BRGH);
+
+
+
+
+
+void UARTSendChar(const char c);
+
+
+
+
+
+
+void UARTSendString(const char* str, const uint8_t max_length);
+
+
+
+
+
+uint8_t UARTDataReady();
+
+
+
+
+
+char UARTReadChar();
+
+
+
+
+
+
+
+uint8_t UARTReadString(char *buf, uint8_t max_length);
+# 12 "lab_3.c" 2
+
 
 
 
@@ -2691,6 +2732,9 @@ void start_ch(uint8_t channel);
 uint8_t canal_act = 0;
 volatile uint8_t var_adc0 = 0;
 volatile uint8_t var_adc1 = 0;
+float cont_uart = 0;
+char string_uart[10];
+char valor_uart = 0;
 char adc0[10];
 char adc1[10];
 float conv0 = 0;
@@ -2698,17 +2742,7 @@ float conv1 = 0;
 
 
 
-
-
-void __attribute__((picinterrupt(("")))) ISR(void) {
-
-}
-
 void main(void) {
-
-    INTCONbits.GIE = 1;
-    INTCONbits.PEIE = 1;
-    INTCONbits.RBIF = 0;
 
     ANSEL = 0;
     ANSELH = 0;
@@ -2717,8 +2751,11 @@ void main(void) {
     start_ch(10);
     Select_ch(12);
 
+    UARTInit(9600, 1);
+
     TRISA = 0;
-    TRISC = 0;
+    TRISCbits.TRISC6 = 0;
+    TRISCbits.TRISC7 = 1;
     TRISD = 0;
     TRISE = 0;
     TRISB = 255;
@@ -2732,14 +2769,13 @@ void main(void) {
     Lcd_Init();
     Lcd_Clear();
 
-
     while (1) {
         Lcd_Set_Cursor(1, 1);
-        Lcd_Write_String("P1");
+        Lcd_Write_String("S1:");
         Lcd_Set_Cursor(1, 8);
-        Lcd_Write_String("P2");
+        Lcd_Write_String("S2:");
         Lcd_Set_Cursor(1, 15);
-        Lcd_Write_String("PC");
+        Lcd_Write_String("S3:");
         if (PIR1bits.ADIF == 1) {
             if (canal_act == 0) {
                 var_adc0 = ADRESH;
@@ -2752,6 +2788,15 @@ void main(void) {
             }
             PIR1bits.ADIF = 0;
         }
+        if (UARTDataReady()) {
+            valor_uart = UARTReadChar();
+            if (valor_uart == '+') {
+                cont_uart++;
+            } else if (valor_uart == '-') {
+                cont_uart--;
+            }
+        }
+
         conv0 = 0;
         conv1 = 0;
 
@@ -2761,11 +2806,20 @@ void main(void) {
         conv1 = (var_adc1 / (float) 255)*5;
         convert(adc1, conv1, 2);
 
+        convert(string_uart, cont_uart, 1);
+
         Lcd_Set_Cursor(2, 1);
         Lcd_Write_String(adc0);
+        Lcd_Set_Cursor(2, 5);
+        Lcd_Write_String("V");
 
-        Lcd_Set_Cursor(2, 8);
+        Lcd_Set_Cursor(2, 7);
         Lcd_Write_String(adc1);
+        Lcd_Set_Cursor(2, 11);
+        Lcd_Write_String("V");
+
+        Lcd_Set_Cursor(2, 15);
+        Lcd_Write_String(string_uart);
         _delay((unsigned long)((20)*(4000000/4000.0)));
 
     }

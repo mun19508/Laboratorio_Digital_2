@@ -1,11 +1,21 @@
 
+/*
+   Autor: Daniel Mundo
+   Carnet: 19508
+   Titulo: Almacenamiento SD
+   Descripcion: Mostrar todos los archivos guardados en la SD y crear
+     un menu donde se pueda seleccionar el archivo que se desea abrir. 
+*/
 #include <SPI.h>
 #include <SD.h>
-
+//----Variables generales----
 File root;
 char opcion = '0';
 uint8_t control = 0;
 char inByte;
+//----Prototipos-------
+void printDirectory(File dir, int numTabs);
+void readText(char dir);
 
 void setup()
 {
@@ -27,8 +37,6 @@ void setup()
   }
   Serial.println("initialization done.");
 
-
-
   Serial.println("done!");
 }
 
@@ -38,36 +46,34 @@ void loop()
     root = SD.open("/");
     printDirectory(root, 0);
     Serial.println("Escriba la posicion del archivo que desea ver: ");
-    control++;
-  }
+    control++; //al aumentar el valor de control se asegura que el mensaje de menu no aparesca hasta que se halla seleccionado
+  }             //una opcion.
   if (Serial.available()) {
-    inByte = Serial.read();
+    inByte = Serial.read();//se guarda el valor enviado por serial
   }
-  if (inByte == '1') {
-    opcion = '1';
-    control--;
+  if (inByte == '1') {//si el valor recibido es un 1
+    opcion = '1'; //se coloca un 1 a la opcion 
+    control--; //se coloca en 0 control para que se muestre el menu
   }
-  if (inByte == '2') {
+  if (inByte == '2') {//misma logica que cuando se recibe un 1
     opcion = '2';
     control--;
   }
-  if (inByte == '3') {
+  if (inByte == '3') {//misma logica que cuando se recibe un 1
     opcion = '3';
     control--;
   }
   readText(opcion);
-  opcion = '0';
+  opcion = '0'; //se asegura que opcion siempre sea 0 para evitar que se muestre valores no deseados
 }
 
-
-//laboratorio parte 2
 void readText(char dir) {
   uint8_t seleccion;
   File archivo;
-  switch (dir) {
+  switch (dir) {//Se abre el archivo dependiendo del valor que tenga la variable opcion 
     case '1':
       archivo = SD.open("ghost.txt");
-      seleccion = 1;
+      seleccion = 1; //habilita la rutina de mostrar el contenido
       break;
     case '2':
       archivo = SD.open("pacman.txt");
@@ -78,10 +84,10 @@ void readText(char dir) {
       seleccion = 1;
       break;
     default:
-      seleccion = 0;
+      seleccion = 0;//inhabilita la rutina de mostrar el contenido
       break;
   }
-  if (seleccion == 1) {
+  if (seleccion == 1) {//rutina que sirve para mostrar la informacion guardada en el archivo seleccionado
     if (archivo) {
       Serial.println(archivo.name());
 
@@ -98,8 +104,7 @@ void readText(char dir) {
   }
 }
 
-//Laboratorio 5 parte 1
-void printDirectory(File dir, int numTabs) {
+void printDirectory(File dir, int numTabs) {//en esta rutina se muestra el contenido guardado en la SD
   dir.rewindDirectory();
   while (true) {
 

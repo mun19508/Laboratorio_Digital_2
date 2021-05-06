@@ -16,5 +16,10 @@
  **************************/
 int main(void)
 {
-	return 0;
+//Parte 2: Configuración del reloj
+    //Setting divider 5
+    //Se utiliza PLL
+    //La frecuencia del cristal es de 16MHz
+    //Se asigna el reloj al sistema
+    SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
 }

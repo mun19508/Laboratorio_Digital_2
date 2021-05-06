@@ -22,4 +22,6 @@ int main(void)
     //La frecuencia del cristal es de 16MHz
     //Se asigna el reloj al sistema
     SysCtlClockSet(SYSCTL_SYSDIV_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+    //Parte 3: Configuracion de Puertos
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);   //habilita el puerto F
 }
